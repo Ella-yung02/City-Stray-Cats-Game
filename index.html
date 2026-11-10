@@ -311,6 +311,31 @@
     .landmark { font-size: clamp(1.8rem, 6vw, 3.2rem); filter: drop-shadow(0 3px 4px #08142699); animation: bob 3.6s infinite alternate; }
     .landmark:nth-child(2) { animation-delay: -.9s; }
     .landmark:nth-child(3) { animation-delay: -1.8s; }
+    .signature-building { position: absolute; z-index: 3; bottom: 32px; left: 50%; width: 118px; height: 104px; transform: translateX(-50%); background: var(--building); border: 4px solid #101d35aa; box-shadow: inset 0 0 0 5px #fff2, 0 5px 10px #08142699; }
+    .signature-building::before { content:""; position:absolute; left:-13px; right:-13px; top:-30px; height:38px; background:var(--roof); border:4px solid #101d35aa; clip-path:polygon(0 100%, 12% 58%, 22% 100%, 34% 45%, 46% 100%, 58% 45%, 70% 100%, 82% 58%, 100% 100%); }
+    .signature-building::after { content:""; position:absolute; left:14px; right:14px; top:28px; bottom:12px; background:repeating-linear-gradient(90deg, #ffd983 0 9px, transparent 9px 22px), repeating-linear-gradient(0deg, transparent 0 15px, #ffd983 15px 22px); opacity:.72; }
+    .signature-japan { border-radius: 0 0 7px 7px; background: #5b2f48; }
+    .signature-japan::before { clip-path: polygon(0 100%, 50% 0, 100% 100%); }
+    .signature-greece { border-radius: 22px 22px 4px 4px; background: #f0e2c0; }
+    .signature-greece::before { top:-18px; height:22px; background:#4e91b5; clip-path:none; border-radius:14px 14px 0 0; }
+    .signature-italy { background:#bc7859; border-radius:4px; }
+    .signature-italy::before { top:-22px; height:28px; background:#d86d4f; clip-path:polygon(0 100%, 50% 0, 100% 100%); }
+    .signature-france { width:52px; height:126px; background:#9a6b80; border-radius:28px 28px 0 0; }
+    .signature-france::before { left:-19px; right:-19px; top:-12px; height:20px; background:#c7a2aa; clip-path:none; border-radius:50%; }
+    .signature-china { background:#b34f4d; border-radius:4px; }
+    .signature-china::before { top:-25px; height:32px; background:#d6a34d; clip-path:polygon(0 100%, 50% 0, 100% 100%); }
+    .signature-turkey { width:106px; height:86px; background:#6b526d; border-radius:50% 50% 0 0; }
+    .signature-turkey::before { top:-37px; height:42px; background:#d6a36a; clip-path:polygon(0 100%, 50% 0, 100% 100%); }
+    .signature-spain { background:#c98355; border-radius:8px; }
+    .signature-spain::before { top:-19px; height:25px; background:#e9a365; clip-path:none; border-radius:50% 50% 0 0; }
+    .signature-mexico { background:#d36b51; border-radius:9px; }
+    .signature-mexico::before { top:-17px; height:23px; background:#e5b15e; clip-path:none; border-radius:50% 50% 0 0; }
+    .signature-brazil { width:132px; height:76px; background:#4c936c; border-radius:50% 50% 0 0; }
+    .signature-brazil::before { top:-26px; height:30px; background:#7abf75; clip-path:polygon(0 100%, 30% 20%, 55% 100%, 78% 0, 100% 100%); }
+    .signature-southafrica { width:136px; height:64px; background:#d08750; border-radius:50% 50% 0 0; }
+    .signature-southafrica::before { top:-38px; height:42px; background:#7b8796; clip-path:polygon(0 100%, 30% 20%, 50% 72%, 73% 0, 100% 100%); }
+    .signature-korea { background:#536d9c; border-radius:4px; }
+    .signature-korea::before { top:-22px; height:28px; background:#b78a62; clip-path:polygon(0 100%, 50% 0, 100% 100%); }
     .scene-label { position: absolute; z-index: 4; top: 10px; left: 10px; max-width: calc(100% - 20px); padding: 5px 11px; border: 1px solid #fff8; border-radius: 999px; background: #10233ccc; font-weight: 850; }
     .scene-lamp { position: absolute; z-index: 3; right: 9%; bottom: 36px; width: 5px; height: 120px; background: #18243a; }
     .scene-lamp::before { content: ""; position: absolute; top: -5px; left: -10px; width: 25px; height: 10px; border-radius: 8px; background: var(--accent); box-shadow: 0 0 12px var(--accent), 0 0 35px #87dbff; animation: flicker 4s infinite; }
@@ -420,7 +445,7 @@
       <p class="note">🎁 Cozy rose coat and sparkly bow tie are starter gifts for every player. More pretty outfits and accessories can be unlocked with style stars (tokens).</p>
       <div class="grid">
         <label>Choose a city map<select id="mapSelect"></select></label>
-        <label>Cozy challenge<select id="difficulty"><option value="easy">🟩 Gentle stroll · 3 fish</option><option value="normal" selected>🟨 Wiggly city adventure · 1 fish</option><option value="hard">🟥 Big brave challenge · 0 fish</option></select></label>
+        <label>Cozy challenge<select id="difficulty"><option value="easy">🟩 Gentle stroll · 3 fish</option><option value="normal" selected>🟨 Wiggly city adventure · 2 fish</option><option value="hard">🟥 Big brave challenge · 0 fish</option></select></label>
         <div><label>How many friends?</label><div id="count" class="colour-picker"></div></div>
         <label>Starting fish cards<input id="starting" type="number" min="0" max="8" value="1" readonly></label>
         <p id="difficultyDescription" class="note"></p>
@@ -464,50 +489,50 @@
     const $ = selector => document.querySelector(selector);
     const screens = ["title", "setup", "wardrobeScreen", "howScreen", "game"];
     const maps = [
-      { name:"Japan", flag:"🇯🇵", tier:"easy", theme:"lantern", detail:"lanterns, cherry blossoms, tiled roofs", landmarks:["🏯","🌸","🏮"] },
-      { name:"Greece", flag:"🇬🇷", tier:"easy", theme:"coastal", detail:"blue doors, olive trees, and a moonlit sea", landmarks:["🏛️","🌊","🫒"] },
-      { name:"Italy", flag:"🇮🇹", tier:"easy", theme:"coastal", detail:"a warm piazza, lemon trees, and a little fountain", landmarks:["⛲","🍋","🏛️"] },
-      { name:"France", flag:"🇫🇷", tier:"normal", theme:"blossom", detail:"cafe awnings, balconies, and twinkly rooftops", landmarks:["🗼","🌷","🏘️"] },
-      { name:"China", flag:"🇨🇳", tier:"normal", theme:"lantern", detail:"lantern-lit lanes, layered roofs, and garden paths", landmarks:["🏮","🏯","🌿"] },
-      { name:"Turkey", flag:"🇹🇷", tier:"normal", theme:"coastal", detail:"market lamps, domes, and a cozy hillside lane", landmarks:["🕌","🌙","🏘️"] },
-      { name:"Spain", flag:"🇪🇸", tier:"normal", theme:"blossom", detail:"bright stucco homes, flowers, and a sunny plaza", landmarks:["🌞","🌺","🏘️"] },
-      { name:"Mexico", flag:"🇲🇽", tier:"hard", theme:"desert", detail:"colourful walls, clay pots, and desert flowers", landmarks:["🌵","🌼","🏘️"] },
-      { name:"Brazil", flag:"🇧🇷", tier:"hard", theme:"tropical", detail:"green hills, tropical leaves, and glowing homes", landmarks:["🌴","🌺","🏙️"] },
-      { name:"South Africa", flag:"🇿🇦", tier:"hard", theme:"mountain", detail:"mountain silhouettes, bright houses, and wildflowers", landmarks:["⛰️","🌼","🏙️"] },
-      { name:"South Korea", flag:"🇰🇷", tier:"hard", theme:"mountain", detail:"traditional eaves, modern lights, and blossoms", landmarks:["🏯","🌸","🏙️"] }
+      { name:"Japan", flag:"🇯🇵", tier:"easy", bonus:2, signature:"japan", theme:"lantern", detail:"lanterns, cherry blossoms, tiled roofs", landmarks:["🏯","🌸","🏮"] },
+      { name:"Greece", flag:"🇬🇷", tier:"easy", bonus:2, signature:"greece", theme:"coastal", detail:"blue doors, olive trees, and a moonlit sea", landmarks:["🏛️","🌊","🫒"] },
+      { name:"Italy", flag:"🇮🇹", tier:"easy", bonus:2, signature:"italy", theme:"coastal", detail:"a warm piazza, lemon trees, and a little fountain", landmarks:["⛲","🍋","🏛️"] },
+      { name:"France", flag:"🇫🇷", tier:"normal", bonus:1, signature:"france", theme:"blossom", detail:"cafe awnings, balconies, and twinkly rooftops", landmarks:["🗼","🌷","🏘️"] },
+      { name:"China", flag:"🇨🇳", tier:"normal", bonus:1, signature:"china", theme:"lantern", detail:"lantern-lit lanes, layered roofs, and garden paths", landmarks:["🏮","🏯","🌿"] },
+      { name:"Turkey", flag:"🇹🇷", tier:"normal", bonus:1, signature:"turkey", theme:"coastal", detail:"market lamps, domes, and a cozy hillside lane", landmarks:["🕌","🌙","🏘️"] },
+      { name:"Spain", flag:"🇪🇸", tier:"normal", bonus:0, signature:"spain", theme:"blossom", detail:"bright stucco homes, flowers, and a sunny plaza", landmarks:["🌞","🌺","🏘️"] },
+      { name:"Mexico", flag:"🇲🇽", tier:"hard", bonus:0, signature:"mexico", theme:"desert", detail:"colourful walls, clay pots, and desert flowers", landmarks:["🌵","🌼","🏘️"] },
+      { name:"Brazil", flag:"🇧🇷", tier:"hard", bonus:0, signature:"brazil", theme:"tropical", detail:"green hills, tropical leaves, and glowing homes", landmarks:["🌴","🌺","🏙️"] },
+      { name:"South Africa", flag:"🇿🇦", tier:"hard", bonus:0, signature:"southafrica", theme:"mountain", detail:"mountain silhouettes, bright houses, and wildflowers", landmarks:["⛰️","🌼","🏙️"] },
+      { name:"South Korea", flag:"🇰🇷", tier:"hard", bonus:0, signature:"korea", theme:"mountain", detail:"traditional eaves, modern lights, and blossoms", landmarks:["🏯","🌸","🏙️"] }
     ];
     const difficultyInfo = {
-      easy: { rank:0, fish:3, description:"Gentle stroll gives your crew three fish cards. Normal adventures begin with one, while the bravest challenge begins with none." },
-      normal: { rank:1, fish:1, description:"Wiggly city adventure gives your crew one fish card. Harder city maps can reduce it to zero." },
+      easy: { fish:3, description:"Gentle stroll always starts with three fish cards. Some cities add bonus fish." },
+      normal: { fish:2, description:"Wiggly city adventure always starts with two fish cards. Some cities add bonus fish." },
       hard: { rank:2, fish:0, description:"Big brave challenge gives your crew no starting fish cards. Every kind choice matters." }
     };
     const difficultyCopy = {
       en: {
         easy: "🟩 Gentle stroll · 3 fish",
-        normal: "🟨 Wiggly city adventure · 1 fish",
+        normal: "🟨 Wiggly city adventure · 2 fish",
         hard: "🟥 Big brave challenge · 0 fish",
-        easyDescription: "Gentle stroll gives your crew three fish cards. Normal adventures begin with one, while the bravest challenge begins with none.",
-        normalDescription: "Wiggly city adventure gives your crew one fish card. Harder city maps can reduce it to zero.",
+        easyDescription: "Gentle stroll always starts with three fish cards. Some cities add bonus fish.",
+        normalDescription: "Wiggly city adventure always starts with two fish cards. Some cities add bonus fish.",
         hardDescription: "Big brave challenge gives your crew no starting fish cards. Every kind choice matters.",
-        raised: "This city raises the challenge, so starting fish are reduced."
+        bonus: "This city adds"
       },
       zh: {
         easy: "🟩 轻松散步 · 3张鱼卡",
-        normal: "🟨 摇摇晃晃的城市冒险 · 1张鱼卡",
+        normal: "🟨 摇摇晃晃的城市冒险 · 2张鱼卡",
         hard: "🟥 勇敢的大挑战 · 0张鱼卡",
-        easyDescription: "轻松散步会给小队三张鱼卡。普通冒险从一张开始，而最勇敢的挑战一张也没有。",
-        normalDescription: "摇摇晃晃的城市冒险会给小队一张鱼卡。更困难的城市地图可能会把它降到零张。",
+        easyDescription: "轻松散步固定从三张鱼卡开始。有些城市会额外增加鱼卡。",
+        normalDescription: "摇摇晃晃的城市冒险固定从两张鱼卡开始。有些城市会额外增加鱼卡。",
         hardDescription: "勇敢的大挑战不会提供初始鱼卡。每一个友善的选择都很重要。",
-        raised: "这座城市提高了挑战难度，所以初始鱼卡会减少。"
+        bonus: "这座城市额外增加"
       },
       "zh-Hant": {
         easy: "🟩 輕鬆散步 · 3張魚卡",
-        normal: "🟨 搖搖晃晃的城市冒險 · 1張魚卡",
+        normal: "🟨 搖搖晃晃的城市冒險 · 2張魚卡",
         hard: "🟥 勇敢的大挑戰 · 0張魚卡",
-        easyDescription: "輕鬆散步會給小隊三張魚卡。普通冒險從一張開始，而最勇敢的挑戰一張也沒有。",
-        normalDescription: "搖搖晃晃的城市冒險會給小隊一張魚卡。更困難的城市地圖可能會把它降到零張。",
+        easyDescription: "輕鬆散步固定從三張魚卡開始。有些城市會額外增加魚卡。",
+        normalDescription: "搖搖晃晃的城市冒險固定從兩張魚卡開始。有些城市會額外增加魚卡。",
         hardDescription: "勇敢的大挑戰不會提供初始魚卡。每一個友善的選擇都很重要。",
-        raised: "這座城市提高了挑戰難度，所以初始魚卡會減少。"
+        bonus: "這座城市額外增加"
       }
     };
     function currentDifficultyCopy() { return difficultyCopy[language] || difficultyCopy.en; }
@@ -522,11 +547,11 @@
       return language === "zh" ? `猫猫${index + 1}` : language === "zh-Hant" ? `貓貓${index + 1}` : `Kitty ${index + 1}`;
     }
     function syncDifficulty() {
-      const selected = $("#difficulty").value, map = selectedMap(), mapRank = difficultyInfo[map.tier]?.rank || 0;
-      const effective = Object.entries(difficultyInfo).find(([, info]) => info.rank === Math.max(difficultyInfo[selected].rank, mapRank))[0];
-      $("#starting").value = difficultyInfo[effective].fish;
+      const selected = $("#difficulty").value, map = selectedMap(), baseFish = difficultyInfo[selected].fish, bonus = map.bonus || 0;
+      $("#starting").value = Math.min(8, baseFish + bonus);
       const copy = currentDifficultyCopy();
-      $("#difficultyDescription").textContent = copy[`${selected}Description`] + (effective !== selected ? ` ${copy.raised}` : "");
+      const bonusText = bonus ? ` ${copy.bonus} ${bonus} ${language === "en" ? "fish cards." : language === "zh" ? "张鱼卡。" : "張魚卡。"}` : "";
+      $("#difficultyDescription").textContent = copy[`${selected}Description`] + bonusText;
     }
     const furColours = [
       ["orange","Honey orange","#e9a35e"],["calico","Calico patches","#d9775d"],["gray","Moonlight gray","#b9b9d1"],["tuxedo","Tuxedo cream","#eee8f5"],
@@ -566,6 +591,10 @@
     function toTraditional(text) {
       return [...text].map(char => simplifiedToTraditional[char] || char).join("");
     }
+    const traditionalToSimplified = Object.fromEntries(Object.entries(simplifiedToTraditional).map(([simplified, traditional]) => [traditional, simplified]));
+    function toSimplified(text) {
+      return [...text].map(char => traditionalToSimplified[char] || char).join("");
+    }
     function normalizeTraditional(text) {
       return text
         .replace(/Cozy rose coat and sparkly bow tie are starter gifts\./g, "玫瑰暖外套和閃亮蝴蝶結是入門禮物。")
@@ -601,31 +630,37 @@
       "A hopeful promise":"充滿希望的約定","The night was difficult, but your kindness kept the crew together.":"夜晚雖然困難，但你的溫柔讓小隊一直在一起。",
       "A rainy lesson":"雨夜裡的成長","There was not enough for everyone yet, so the crew will try again tomorrow.":"現在還沒有足夠的資源照顧大家，小隊明天會再試一次。"
     };
+    function localizeGameOutput(text) {
+      return language === "zh" ? toSimplified(text) : text;
+    }
     function gameText(text) {
       if (language === "en") return text;
       const kittyMatch = text.match(/^(.+)'s kitty$/);
-      if (kittyMatch) return `${kittyMatch[1]}的貓貓`;
+      if (kittyMatch) return localizeGameOutput(`${kittyMatch[1]}的貓貓`);
       const statusMatch = text.match(/^(.+), what would feel kindest\?$/);
       if (statusMatch) {
-        const statusName = /^Kitty (\d+)$/.test(statusMatch[1]) ? `貓貓${statusMatch[1].match(/\d+/)[0]}` : statusMatch[1];
-        return `${statusName}，怎樣做最溫柔呢？`;
+        const statusName = /^Kitty (\d+)$/.test(statusMatch[1]) ? (language === "zh" ? `猫猫${statusMatch[1].match(/\d+/)[0]}` : `貓貓${statusMatch[1].match(/\d+/)[0]}`) : statusMatch[1];
+        return language === "zh" ? `${statusName}，怎样做最温柔呢？` : `${statusName}，怎樣做最溫柔呢？`;
       }
       const turnMatch = text.match(/^🐾 (.+)'s turn$/);
-      if (turnMatch) return `🐾 ${turnMatch[1] === "Kitty 1" ? "貓貓1" : turnMatch[1]}的回合`;
+      if (turnMatch) {
+        const turnName = turnMatch[1].replace(/^Kitty (\d+)$/, "貓貓$1");
+        return localizeGameOutput(`${"🐾 " + turnName}的回合`);
+      }
       const logMatch = text.match(/^(Kitty \d+) (found a yummy snack\.|shared dinner\.)$/);
       if (logMatch) {
         const logName = logMatch[1].replace(/^Kitty (\d+)$/, "貓貓$1");
-        return `${logName} ${logMatch[2] === "found a yummy snack." ? "找到了美味點心。" : "分享了晚餐。"}`;
+        return localizeGameOutput(`${logName} ${logMatch[2] === "found a yummy snack." ? "找到了美味點心。" : "分享了晚餐。"}`);
       }
       const resultMatch = text.match(/^(🌟|🌧️) (.+)$/);
-      if (resultMatch && gameZh[resultMatch[2]]) return `${resultMatch[1]} ${gameZh[resultMatch[2]]}`;
+      if (resultMatch && gameZh[resultMatch[2]]) return localizeGameOutput(`${resultMatch[1]} ${gameZh[resultMatch[2]]}`);
       const statsMatch = text.match(/^🎨 (.+) · 🐟 (\d+) fish · 💧 (\d+)\/3 worry$/);
       if (statsMatch) {
         const colors = { orange:"蜜糖橙", calico:"三花斑紋", gray:"月光灰", tuxedo:"奶油燕尾", cream:"香草奶油", black:"午夜藍黑", white:"雪白", brown:"可可棕" };
-        return `🎨 ${colors[statsMatch[1]] || statsMatch[1]} · 🐟 ${statsMatch[2]} 魚 · 💧 ${statsMatch[3]}/3 擔憂`;
+        return localizeGameOutput(`🎨 ${colors[statsMatch[1]] || statsMatch[1]} · 🐟 ${statsMatch[2]} 魚 · 💧 ${statsMatch[3]}/3 擔憂`);
       }
       const translated = gameZh[text] || translateText(text);
-      return language === "zh-Hant" ? normalizeTraditional(toTraditional(translated)) : translated;
+      return language === "zh-Hant" ? normalizeTraditional(toTraditional(translated)) : language === "zh" ? toSimplified(translated) : translated;
     }
     const validZhPairs = zhPairs.filter(pair => Array.isArray(pair) && pair.length >= 2 && typeof pair[0] === "string" && typeof pair[1] === "string");
     const tcPairs = validZhPairs.map(([english, chinese]) => [english, toTraditional(chinese)]);
@@ -745,6 +780,7 @@
         <span class="scene-label">${map.flag} ${esc(sceneLabel)}</span>
         <div class="scene-hills"></div>
         <div class="scene-buildings">${heights.map((height, index) => `<span class="building ${index % 3 === 1 ? "roof" : ""}" style="--h:${height}px;--w:${8 + index % 4 * 2}%"></span>`).join("")}</div>
+        <div class="signature-building signature-${map.signature}" aria-hidden="true"></div>
         <div class="scene-landmarks">${map.landmarks.map(item => `<span class="landmark">${item}</span>`).join("")}</div>
         <div class="scene-pixel-grid"></div><span class="scene-lamp"></span><div class="scene-road"></div><div class="scene-weather" aria-hidden="true"></div>`;
     }
