@@ -551,10 +551,10 @@
       const translated = gameZh[text] || translateText(text);
       return language === "zh-Hant" ? normalizeTraditional(toTraditional(translated)) : translated;
     }
-    const tcPairs = zhPairs.map(([english, chinese]) => [english, toTraditional(chinese)]);
+    const tcPairs = zhPairs.filter(Boolean).map(([english, chinese]) => [english, toTraditional(chinese)]);
     function translateText(text) {
       let output = text;
-      const pairs = language === "zh" ? zhPairs : language === "zh-Hant" ? tcPairs : [...zhPairs].reverse().map(([english, chinese]) => [chinese, english]);
+      const pairs = language === "zh" ? zhPairs.filter(Boolean) : language === "zh-Hant" ? tcPairs : [...zhPairs].filter(Boolean).reverse().map(([english, chinese]) => [chinese, english]);
       pairs.forEach(([from, to]) => { output = output.split(from).join(to); });
       if (language === "zh") output = output.replace(/^Round (\d+) of 4$/, "第$1回合，共4回合").replace(/^🐟 Fish cards: (\d+)\/(\d+)$/, "🐟 鱼卡：$1/$2").replace(/^🐾 (.+)'s turn$/, "🐾 $1的回合").replace(/^🎨 (.+)$/, "🎨 $1").replace(/^💧 (\d+)\/3 worry$/, "💧 担忧 $1/3").replace(/^🍲 Food: (\d+) · 🩹 Medical: (\d+)$/, "🍲 食物：$1 · 🩹 医疗：$2").replace(/^Player (\d+)'s sweet name$/, "玩家$1的可爱名字").replace(/^Fur colour$/, "毛色").replace(/^Outfit$/, "服装").replace(/^Accessory$/, "配饰").replace(/^Kitty (\d+)$/, "猫猫$1").replace(/^Your sparkly pixel kitty$/, "你的闪闪像素猫猫").replace(/^96 × 96 pixels · blink, wiggle, and twinkle ✨$/, "96 × 96像素 · 会眨眼、摇摆和闪闪发光 ✨").replace(/^Detailed 96×96 pixel preview ✨$/, "精美像素预览 ✨").replace(/^Unlock · (\d+) stars$/, "解锁 · $1颗星星").replace(/ · (简单|普通|困难) city$/, " · $1级城市").replace(/ · (easy|normal|hard) city$/, " · $1级城市").replace(/ is full of /, "充满");
       else if (language === "zh-Hant") output = normalizeTraditional(toTraditional(output.replace(/^Round (\d+) of 4$/, "第$1回合，共4回合").replace(/^🐟 魚卡：(\d+)\/(\d+)$/, "🐟 魚卡：$1/$2").replace(/^🐾 (.+)'s turn$/, "🐾 $1的回合").replace(/^💧 (\d+)\/3 worry$/, "💧 擔憂 $1/3").replace(/^🍲 Food: (\d+) · 🩹 Medical: (\d+)$/, "🍲 食物：$1 · 🩹 醫療：$2").replace(/^Player (\d+)'s sweet name$/, "玩家$1的可愛名字").replace(/^Fur colour$/, "毛色").replace(/^Outfit$/, "服裝").replace(/^Accessory$/, "配飾").replace(/^Kitty (\d+)$/, "貓貓$1").replace(/^Your sparkly pixel kitty$/, "你的閃閃像素貓貓").replace(/^Unlock · (\d+) stars$/, "解鎖 · $1顆星星").replace(/ · (簡單|普通|困難) city$/, " · $1級城市").replace(/ · (easy|normal|hard) city$/, " · $1級城市").replace(/ is full of /, "充滿")));
