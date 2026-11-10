@@ -855,6 +855,14 @@
       const tailLift = petted ? -2 : 0;
       const outfit = canvas.dataset.outfit || "coat";
       const accessory = canvas.dataset.accessory || "bowtie";
+      const signatureAccessory = {
+        "jp-kimono":"fan","jp-traveler":"umbrella","gr-arch":"sun","gr-olive":"leaf",
+        "it-piazza":"mask","it-lemon":"lemon","fr-cafe":"croissant","fr-bloom":"ribbon",
+        "cn-lantern":"lantern","cn-garden":"jade","tr-bazaar":"mosaic","tr-moon":"star",
+        "es-sun":"fan","es-flower":"flower","mx-desert":"cactus","mx-flower":"marigold",
+        "br-tropical":"palm","br-carnival":"sparkle","za-mountain":"mountain","za-wildflower":"badge",
+        "kr-hanok":"tassel","kr-blossom":"neon"
+      }[outfit];
       const palette = {
         orange:["#e9a35e","#ad6949","#f7bd78","#c87845"], calico:["#f4dfc3","#6d4651","#d9775d","#a85d4d"],
         gray:["#b9b9d1","#74758e","#d7d6e5","#85859d"], tuxedo:["#eee8f5","#3d344e","#fff","#51475e"],
@@ -893,6 +901,26 @@
       else if (outfit === "kr-hanok") { p(8,18,clothes,16,9); p(10,19,"#e8d2ef",4,2); p(18,19,"#e8d2ef",4,2); p(14,23,"#e4b85c",3,2); p(11,26,"#e8d2ef",3,1); p(18,26,"#e8d2ef",3,1); }
       else if (outfit === "kr-blossom") { p(8,17,clothes,16,10); p(11,18,"#f8c4d7",3,2); p(18,18,"#f8c4d7",3,2); p(10,23,"#c7f0e2",3,1); p(19,23,"#c7f0e2",3,1); p(14,25,"#f8c4d7",3,2); }
       else { p(9,19,clothes,14,6); p(11,25,clothes,4,2); p(17,25,clothes,4,2); p(10,19,"#fff0cc",12,1); }
+      if (signatureAccessory === "fan") { p(5,15,"#f4d36a",3,4); p(4,14,"#d85b7d",5,1); }
+      if (signatureAccessory === "umbrella") { p(26,9,"#d9e9fa",2,7); p(24,8,"#6f8fb5",6,2); }
+      if (signatureAccessory === "sun") { p(14,18,"#f5d05d",3,3); p(13,17,"#fff4d2",1,1); p(17,17,"#fff4d2",1,1); }
+      if (signatureAccessory === "leaf") { p(5,18,"#b7d69a",3,2); p(4,17,"#78965e",2,2); }
+      if (signatureAccessory === "mask") { p(12,21,"#e8b769",3,2); p(17,21,"#e8b769",3,2); }
+      if (signatureAccessory === "lemon") { p(25,18,"#f6e5a8",3,3); p(26,17,"#6eaa63",2,1); }
+      if (signatureAccessory === "croissant") { p(4,20,"#e9d1b4",4,2); p(5,19,"#b8794e",2,1); }
+      if (signatureAccessory === "ribbon") { p(25,17,"#f3d9e7",4,2); p(27,19,"#c879a6",2,3); }
+      if (signatureAccessory === "lantern") { p(26,16,"#f4d36a",3,4); p(27,20,"#c74c43",1,2); }
+      if (signatureAccessory === "jade") { p(5,22,"#c7e4c5",3,3); p(6,21,"#4f9a87",1,1); }
+      if (signatureAccessory === "mosaic") { p(4,19,"#e7b5ca",4,3); p(5,20,"#f1cf6b",1,1); }
+      if (signatureAccessory === "star") { p(25,16,"#f1cf6b",3,3); p(26,15,"#f1cf6b",1,5); }
+      if (signatureAccessory === "flower" || signatureAccessory === "marigold") { p(5,16,"#f5cc61",3,3); p(6,15,"#f8e6a8",1,5); }
+      if (signatureAccessory === "cactus") { p(4,18,"#5d9b7a",3,5); p(5,17,"#5d9b7a",1,2); }
+      if (signatureAccessory === "palm") { p(25,16,"#b9e1a8",2,6); p(23,15,"#3f9d79",5,2); }
+      if (signatureAccessory === "sparkle") { p(5,15,"#f2c65d",2,2); p(4,16,"#e77da8",4,1); p(5,17,"#70c7d7",2,2); }
+      if (signatureAccessory === "mountain") { p(4,17,"#d9e8ef",5,4); p(5,16,"#6e9a6b",3,1); }
+      if (signatureAccessory === "badge") { p(25,20,"#f0b5b3",3,3); p(26,21,"#e3c36a",1,1); }
+      if (signatureAccessory === "tassel") { p(5,16,"#e4b85c",2,7); p(4,22,"#e8d2ef",4,2); }
+      if (signatureAccessory === "neon") { p(25,18,"#c7f0e2",3,1); p(26,19,"#f8c4d7",1,3); }
       const eye = blink ? palette[0] : "#30243d"; p(11,12,eye,2,blink ? 1 : 3); p(20,12,eye,2,blink ? 1 : 3); if (!blink) { p(11,12,"#fff9ec"); p(20,12,"#fff9ec"); } p(15,16,"#db7999",2,1); p(14,17,"#4b3546"); p(17,17,"#4b3546");
       if (accessory === "bowtie") { p(12,18,"#ff6d9d",2,2); p(16,18,"#ff6d9d",2,2); p(14,18,"#ffe29a",2,2); }
       if (accessory === "bell") { p(14,19,"#ffd75e",3,3); p(15,22,"#fff1a7"); }
@@ -961,7 +989,7 @@
       const item = pool[Math.floor(Math.random() * pool.length)];
       saveData.outfits.push(item[0]);
       save();
-      result.textContent = language === "en" ? `You won ${wardrobeName(item)}!` : language === "zh" ? `你抽中了${wardrobeName(item)}！` : `你抽中了${wardrobeName(item)}！`;
+      result.textContent = language === "en" ? `You won ${wardrobeName(item)}! It is now available in your wardrobe.` : language === "zh" ? `你抽中了${wardrobeName(item)}！这套服装现在已经出现在你的衣橱里。` : `你抽中了${wardrobeName(item)}！這套服裝現在已經出現在你的衣櫥裡。`;
       renderSetups();
       renderShop();
     }
