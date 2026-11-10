@@ -275,22 +275,45 @@
     .country-scene[data-map="Spain"] { --sky:#3a6680; --ground:#684d38; --far:#895c46; }
     .country-scene[data-map="South Africa"] { --sky:#365b76; --ground:#514b3d; --far:#6d654a; }
     .country-scene[data-map="South Korea"] { --sky:#263e70; --ground:#3d344e; --far:#485780; }
+    .country-scene { --building:#18395b; --roof:#875548; --accent:#ffe29a; }
+    .country-scene[data-map="Japan"] { --building:#263c68; --roof:#a85c68; --accent:#ffcf91; }
+    .country-scene[data-map="Greece"] { --building:#2e5265; --roof:#d9b879; --accent:#b9efff; }
+    .country-scene[data-map="Italy"] { --building:#574669; --roof:#c8785d; --accent:#ffd28a; }
+    .country-scene[data-map="France"] { --building:#334b72; --roof:#8e6688; --accent:#ffc8c8; }
+    .country-scene[data-map="China"] { --building:#563653; --roof:#c75d56; --accent:#ffd26e; }
+    .country-scene[data-map="Turkey"] { --building:#4a405f; --roof:#b26b58; --accent:#ffd493; }
+    .country-scene[data-map="Spain"] { --building:#6b4b42; --roof:#d08354; --accent:#ffe08b; }
+    .country-scene[data-map="Mexico"] { --building:#765039; --roof:#d96e4d; --accent:#ffd36d; }
+    .country-scene[data-map="Brazil"] { --building:#24594f; --roof:#4e9470; --accent:#b9f08e; }
+    .country-scene[data-map="South Africa"] { --building:#5b5540; --roof:#ae824f; --accent:#ffe18a; }
+    .country-scene[data-map="South Korea"] { --building:#35466d; --roof:#78628f; --accent:#b9d8ff; }
+    .country-scene[data-theme="coastal"] .scene-hills { clip-path: polygon(0 70%, 18% 52%, 33% 68%, 48% 28%, 64% 61%, 79% 38%, 100% 58%, 100% 100%, 0 100%); }
+    .country-scene[data-theme="lantern"] .scene-weather::before { content:"✦  ·  🏮  ·  ✦  ·  🏮  ·  ✦"; }
+    .country-scene[data-theme="blossom"] .scene-weather::before { content:"✿   ·   ✧   ✿   ·   ✧   ✿"; }
+    .country-scene[data-theme="tropical"] .scene-weather::before { content:"·   ✦   🌿   ·   ✦   🌿"; }
+    .country-scene[data-theme="desert"] .scene-weather::before { content:"·   ✧   ·   ✧   ·   ✧"; color:#ffd78a99; }
+    .country-scene[data-theme="mountain"] .scene-weather::before { content:"❄   ·   ✧   ·   ❄   ·   ✧"; }
+    .country-scene[data-theme="coastal"] .scene-road { background:linear-gradient(#5f7890,#31495b); }
+    .country-scene[data-theme="lantern"] .scene-road { background:linear-gradient(#76504c,#352d3b); }
+    .country-scene[data-theme="tropical"] .scene-road { background:linear-gradient(#416b55,#263e38); }
+    .country-scene[data-theme="desert"] .scene-road { background:linear-gradient(#866044,#493c38); }
+    .country-scene[data-theme="mountain"] .scene-road { background:linear-gradient(#596070,#343746); }
     .scene-stars { position: absolute; inset: 15px; color: #fff1bd; opacity: .65; letter-spacing: 26px; }
     .scene-sun { position: absolute; top: 25px; right: 13%; width: 48px; height: 48px; border-radius: 50%; background: #ffe7a7; box-shadow: 0 0 25px #ffe7a7; }
     .scene-cloud { position: absolute; top: 40px; left: 12%; font-size: 2rem; opacity: .45; animation: drift 16s linear infinite alternate; }
     .scene-hills { position: absolute; right: -5%; bottom: 38px; left: -5%; height: 90px; background: var(--far); clip-path: polygon(0 70%, 15% 35%, 27% 65%, 42% 18%, 57% 63%, 70% 28%, 84% 67%, 100% 40%, 100% 100%, 0 100%); opacity: .85; }
     .scene-buildings { position: absolute; right: 0; bottom: 34px; left: 0; display: flex; align-items: end; justify-content: space-around; height: 120px; }
-    .building { position: relative; width: var(--w); height: var(--h); border-radius: 5px 5px 0 0; background: #18395b; box-shadow: inset 6px 0 #fff1; }
+    .building { position: relative; width: var(--w); height: var(--h); border-radius: 5px 5px 0 0; background: var(--building); box-shadow: inset 6px 0 #fff1; }
     .building:nth-child(even) { background: #274c55; }
     .building::before { content: ""; position: absolute; inset: 12px 7px; background: repeating-linear-gradient(90deg, transparent 0 11px, #ffd98399 11px 16px, transparent 16px 25px), repeating-linear-gradient(0deg, transparent 0 15px, #ffd98377 15px 20px, transparent 20px 30px); }
-    .building.roof::after { content: ""; position: absolute; top: -15px; left: -5px; width: calc(100% + 10px); height: 17px; background: #875548; clip-path: polygon(0 100%, 50% 0, 100% 100%); }
+    .building.roof::after { content: ""; position: absolute; top: -15px; left: -5px; width: calc(100% + 10px); height: 17px; background: var(--roof); clip-path: polygon(0 100%, 50% 0, 100% 100%); }
     .scene-landmarks { position: absolute; right: 16%; bottom: 35px; left: 16%; display: flex; justify-content: space-between; align-items: end; z-index: 2; pointer-events: none; }
     .landmark { font-size: clamp(1.8rem, 6vw, 3.2rem); filter: drop-shadow(0 3px 4px #08142699); animation: bob 3.6s infinite alternate; }
     .landmark:nth-child(2) { animation-delay: -.9s; }
     .landmark:nth-child(3) { animation-delay: -1.8s; }
     .scene-label { position: absolute; z-index: 4; top: 10px; left: 10px; max-width: calc(100% - 20px); padding: 5px 11px; border: 1px solid #fff8; border-radius: 999px; background: #10233ccc; font-weight: 850; }
     .scene-lamp { position: absolute; z-index: 3; right: 9%; bottom: 36px; width: 5px; height: 120px; background: #18243a; }
-    .scene-lamp::before { content: ""; position: absolute; top: -5px; left: -10px; width: 25px; height: 10px; border-radius: 8px; background: #ffe29a; box-shadow: 0 0 12px #ffe29a, 0 0 35px #87dbff; animation: flicker 4s infinite; }
+    .scene-lamp::before { content: ""; position: absolute; top: -5px; left: -10px; width: 25px; height: 10px; border-radius: 8px; background: var(--accent); box-shadow: 0 0 12px var(--accent), 0 0 35px #87dbff; animation: flicker 4s infinite; }
     .scene-road { position: absolute; z-index: 3; right: 0; bottom: 0; left: 0; height: 42px; border-top: 2px solid #ffe6bc66; background: linear-gradient(#71595a, #352f3f); }
     .scene-road::before {
       content: "▦  ▦  ▦  ▦  ▦  ▦  ▦  ▦  ▦";
@@ -397,9 +420,10 @@
       <p class="note">🎁 Cozy rose coat and sparkly bow tie are starter gifts for every player. More pretty outfits and accessories can be unlocked with style stars (tokens).</p>
       <div class="grid">
         <label>Choose a city map<select id="mapSelect"></select></label>
-        <label>Cozy challenge<select id="difficulty"><option value="easy">🟩 Gentle stroll</option><option value="normal" selected>🟨 Wiggly city adventure</option><option value="hard">🟥 Big brave challenge</option></select></label>
+        <label>Cozy challenge<select id="difficulty"><option value="easy">🟩 Gentle stroll · 3 fish</option><option value="normal" selected>🟨 Wiggly city adventure · 1 fish</option><option value="hard">🟥 Big brave challenge · 0 fish</option></select></label>
         <div><label>How many friends?</label><div id="count" class="colour-picker"></div></div>
-        <label>Starting fish cards<input id="starting" type="number" min="0" max="8" value="2"></label>
+        <label>Starting fish cards<input id="starting" type="number" min="0" max="8" value="1" readonly></label>
+        <p id="difficultyDescription" class="note"></p>
       </div>
       <div id="setupScene" class="country-scene"></div>
       <p id="mapDescription" class="note"></p>
@@ -440,18 +464,70 @@
     const $ = selector => document.querySelector(selector);
     const screens = ["title", "setup", "wardrobeScreen", "howScreen", "game"];
     const maps = [
-      { name:"Japan", flag:"🇯🇵", tier:"easy", detail:"lanterns, cherry blossoms, tiled roofs", landmarks:["🏯","🌸","🏮"] },
-      { name:"Greece", flag:"🇬🇷", tier:"easy", detail:"blue doors, olive trees, and a moonlit sea", landmarks:["🏛️","🌊","🫒"] },
-      { name:"Italy", flag:"🇮🇹", tier:"easy", detail:"a warm piazza, lemon trees, and a little fountain", landmarks:["⛲","🍋","🏛️"] },
-      { name:"France", flag:"🇫🇷", tier:"normal", detail:"cafe awnings, balconies, and twinkly rooftops", landmarks:["🗼","🌷","🏘️"] },
-      { name:"China", flag:"🇨🇳", tier:"normal", detail:"lantern-lit lanes, layered roofs, and garden paths", landmarks:["🏮","🏯","🌿"] },
-      { name:"Turkey", flag:"🇹🇷", tier:"normal", detail:"market lamps, domes, and a cozy hillside lane", landmarks:["🕌","🌙","🏘️"] },
-      { name:"Spain", flag:"🇪🇸", tier:"normal", detail:"bright stucco homes, flowers, and a sunny plaza", landmarks:["🌞","🌺","🏘️"] },
-      { name:"Mexico", flag:"🇲🇽", tier:"hard", detail:"colourful walls, clay pots, and desert flowers", landmarks:["🌵","🌼","🏘️"] },
-      { name:"Brazil", flag:"🇧🇷", tier:"hard", detail:"green hills, tropical leaves, and glowing homes", landmarks:["🌴","🌺","🏙️"] },
-      { name:"South Africa", flag:"🇿🇦", tier:"hard", detail:"mountain silhouettes, bright houses, and wildflowers", landmarks:["⛰️","🌼","🏙️"] },
-      { name:"South Korea", flag:"🇰🇷", tier:"hard", detail:"traditional eaves, modern lights, and blossoms", landmarks:["🏯","🌸","🏙️"] }
+      { name:"Japan", flag:"🇯🇵", tier:"easy", theme:"lantern", detail:"lanterns, cherry blossoms, tiled roofs", landmarks:["🏯","🌸","🏮"] },
+      { name:"Greece", flag:"🇬🇷", tier:"easy", theme:"coastal", detail:"blue doors, olive trees, and a moonlit sea", landmarks:["🏛️","🌊","🫒"] },
+      { name:"Italy", flag:"🇮🇹", tier:"easy", theme:"coastal", detail:"a warm piazza, lemon trees, and a little fountain", landmarks:["⛲","🍋","🏛️"] },
+      { name:"France", flag:"🇫🇷", tier:"normal", theme:"blossom", detail:"cafe awnings, balconies, and twinkly rooftops", landmarks:["🗼","🌷","🏘️"] },
+      { name:"China", flag:"🇨🇳", tier:"normal", theme:"lantern", detail:"lantern-lit lanes, layered roofs, and garden paths", landmarks:["🏮","🏯","🌿"] },
+      { name:"Turkey", flag:"🇹🇷", tier:"normal", theme:"coastal", detail:"market lamps, domes, and a cozy hillside lane", landmarks:["🕌","🌙","🏘️"] },
+      { name:"Spain", flag:"🇪🇸", tier:"normal", theme:"blossom", detail:"bright stucco homes, flowers, and a sunny plaza", landmarks:["🌞","🌺","🏘️"] },
+      { name:"Mexico", flag:"🇲🇽", tier:"hard", theme:"desert", detail:"colourful walls, clay pots, and desert flowers", landmarks:["🌵","🌼","🏘️"] },
+      { name:"Brazil", flag:"🇧🇷", tier:"hard", theme:"tropical", detail:"green hills, tropical leaves, and glowing homes", landmarks:["🌴","🌺","🏙️"] },
+      { name:"South Africa", flag:"🇿🇦", tier:"hard", theme:"mountain", detail:"mountain silhouettes, bright houses, and wildflowers", landmarks:["⛰️","🌼","🏙️"] },
+      { name:"South Korea", flag:"🇰🇷", tier:"hard", theme:"mountain", detail:"traditional eaves, modern lights, and blossoms", landmarks:["🏯","🌸","🏙️"] }
     ];
+    const difficultyInfo = {
+      easy: { rank:0, fish:3, description:"Gentle stroll gives your crew three fish cards. Normal adventures begin with one, while the bravest challenge begins with none." },
+      normal: { rank:1, fish:1, description:"Wiggly city adventure gives your crew one fish card. Harder city maps can reduce it to zero." },
+      hard: { rank:2, fish:0, description:"Big brave challenge gives your crew no starting fish cards. Every kind choice matters." }
+    };
+    const difficultyCopy = {
+      en: {
+        easy: "🟩 Gentle stroll · 3 fish",
+        normal: "🟨 Wiggly city adventure · 1 fish",
+        hard: "🟥 Big brave challenge · 0 fish",
+        easyDescription: "Gentle stroll gives your crew three fish cards. Normal adventures begin with one, while the bravest challenge begins with none.",
+        normalDescription: "Wiggly city adventure gives your crew one fish card. Harder city maps can reduce it to zero.",
+        hardDescription: "Big brave challenge gives your crew no starting fish cards. Every kind choice matters.",
+        raised: "This city raises the challenge, so starting fish are reduced."
+      },
+      zh: {
+        easy: "🟩 轻松散步 · 3张鱼卡",
+        normal: "🟨 摇摇晃晃的城市冒险 · 1张鱼卡",
+        hard: "🟥 勇敢的大挑战 · 0张鱼卡",
+        easyDescription: "轻松散步会给小队三张鱼卡。普通冒险从一张开始，而最勇敢的挑战一张也没有。",
+        normalDescription: "摇摇晃晃的城市冒险会给小队一张鱼卡。更困难的城市地图可能会把它降到零张。",
+        hardDescription: "勇敢的大挑战不会提供初始鱼卡。每一个友善的选择都很重要。",
+        raised: "这座城市提高了挑战难度，所以初始鱼卡会减少。"
+      },
+      "zh-Hant": {
+        easy: "🟩 輕鬆散步 · 3張魚卡",
+        normal: "🟨 搖搖晃晃的城市冒險 · 1張魚卡",
+        hard: "🟥 勇敢的大挑戰 · 0張魚卡",
+        easyDescription: "輕鬆散步會給小隊三張魚卡。普通冒險從一張開始，而最勇敢的挑戰一張也沒有。",
+        normalDescription: "搖搖晃晃的城市冒險會給小隊一張魚卡。更困難的城市地圖可能會把它降到零張。",
+        hardDescription: "勇敢的大挑戰不會提供初始魚卡。每一個友善的選擇都很重要。",
+        raised: "這座城市提高了挑戰難度，所以初始魚卡會減少。"
+      }
+    };
+    function currentDifficultyCopy() { return difficultyCopy[language] || difficultyCopy.en; }
+    function renderDifficultyText() {
+      const copy = currentDifficultyCopy();
+      ["easy", "normal", "hard"].forEach(key => {
+        const option = $(`#difficulty option[value="${key}"]`);
+        if (option) option.textContent = copy[key];
+      });
+    }
+    function defaultKittyName(index) {
+      return language === "zh" ? `猫猫${index + 1}` : language === "zh-Hant" ? `貓貓${index + 1}` : `Kitty ${index + 1}`;
+    }
+    function syncDifficulty() {
+      const selected = $("#difficulty").value, map = selectedMap(), mapRank = difficultyInfo[map.tier]?.rank || 0;
+      const effective = Object.entries(difficultyInfo).find(([, info]) => info.rank === Math.max(difficultyInfo[selected].rank, mapRank))[0];
+      $("#starting").value = difficultyInfo[effective].fish;
+      const copy = currentDifficultyCopy();
+      $("#difficultyDescription").textContent = copy[`${selected}Description`] + (effective !== selected ? ` ${copy.raised}` : "");
+    }
     const furColours = [
       ["orange","Honey orange","#e9a35e"],["calico","Calico patches","#d9775d"],["gray","Moonlight gray","#b9b9d1"],["tuxedo","Tuxedo cream","#eee8f5"],
       ["cream","Vanilla cream","#f5dfb8"],["black","Midnight blue-black","#342b43"],["white","Snowy white","#fffaf0"],["brown","Cocoa brown","#9a624d"]
@@ -481,7 +557,7 @@
     let players = [], turn = 0, turns = 0, ended = false, notes = [], station = { food:0, medical:0 };
     let language = ["en", "zh", "zh-Hant"].includes(localStorage.getItem("cityCatsLanguage")) ? localStorage.getItem("cityCatsLanguage") : "en";
     const zhPairs = [
-      ["City Stray Cats","城市流浪猫"],["A tiny, twinkly comeback adventure","一场闪闪发光的小小回归冒险"],["Gentle paws, warm hearts, glowing streets","温柔的小爪爪、暖暖的心和发光的街道"],["Let's make a kitty team!","一起组建猫猫小队吧！"],["Open the cuddle wardrobe","打开抱抱衣橱"],["How to play","玩法说明"],["Choose sweet colours, dress up your little friends, and help the whole crew find safe, cozy moments.","选择可爱的颜色，为小伙伴换上漂亮衣服，帮助大家找到安全又温暖的时光。"],["Play cozy night music","播放温柔夜曲"],["Pause cozy night music","暂停温柔夜曲"],["Let's make your adorable cat crew","来制作可爱的猫猫小队吧"],["Back to the cozy menu","回到温馨菜单"],["Style stars","风格星星"],["Cozy rose coat and sparkly bow tie are starter gifts for every player. More pretty outfits and accessories can be unlocked with style stars (tokens).","玫瑰暖外套和闪亮蝴蝶结是每位玩家的入门礼物。想要更多漂亮服装和配饰，可以用风格星星（代币）解锁。"],["Choose a city map","选择城市地图"],["Cozy challenge","温馨挑战"],["Gentle stroll","轻松散步"],["Wiggly city adventure","摇摇晃晃的城市冒险"],["Big brave challenge","勇敢的大挑战"],["How many friends?","有多少位朋友？"],["Starting fish cards","初始鱼卡"],["Start our sparkly adventure","开始闪闪发光的冒险"],["Visit wardrobe","访问衣橱"],["The cuddle wardrobe","抱抱衣橱"],["Want more pretty looks? Spend your style stars (tokens) to unlock coats, capes, scarves, glasses, bells, and tiny backpacks.","想要更多漂亮造型吗？用风格星星（代币）解锁外套、斗篷、围巾、眼镜、铃铛和小背包吧。"],["How to play, little paw-friend","玩法说明，小爪爪朋友"],["Take turns choosing kind actions for your crew.","轮流为小队选择友善的行动。"],["Collect three fish cards for every kitty.","为每只猫猫收集三张鱼卡。"],["Keep every cat's worry below 3.","让每只猫猫的担忧保持在3以下。"],["Share helpful supplies and cozy breaks.","分享有用的物资，享受温暖的休息。"],["Finish together to earn style stars.","一起完成冒险，赢得风格星星。"],["Okay, let's make our kitties!","好啦，一起制作猫猫吧！"],["Your lovely crew","你可爱的猫猫小队"],["Shared rescue nook","共享救援小窝"],["Our sweet team goal","我们甜甜的团队目标"],["Gather fish cards, lower worry, and help every kitty feel safe.","收集鱼卡、减少担忧，让每只猫猫都感到安全。"],["Little neighborhood notes","街区小笔记"],["Leave this adventure","离开这次冒险"],["Back to the cozy menu","回到温馨菜单"],["Cozy rose coat","玫瑰暖外套"],["Sparkly bow tie","闪亮蝴蝶结"],["Sunny raincoat","阳光雨衣"],["Berry-soft scarf","莓果软围巾"],["Tiny hero cape","迷你英雄斗篷"],["Cloud-puff hoodie","云朵蓬蓬卫衣"],["Rescue helper vest","救援助手背心"],["Cherry blossom wrap","樱花披肩"],["Olive garden outfit","橄榄花园装"],      ["A soft rose coat for sleepy, cuddly evenings.","适合慵懒依偎夜晚的柔软玫瑰外套。"],["A sunny splash-proof coat for brave rainy walks.","適合勇敢雨中散步的陽光防水外套。"],["A berry-soft scarf that keeps whiskers warm.","讓鬍鬚保持溫暖的莓果柔軟圍巾。"],["A tiny hero cape for helpful, bouncy rescues.","適合活潑助人救援的迷你英雄斗篷。"],["A cloud-puff hoodie for calm, floaty comfort.","帶來平靜輕盈舒適感的雲朵蓬蓬衛衣。"],["A bright helper vest for proud rescue work.","適合自豪投入救援工作的明亮助手背心。"],["A cherry blossom wrap for peaceful spring strolls.","適合平靜春日散步的櫻花披肩。"],["An olive garden outfit for sunny, graceful wandering.","適合陽光優雅漫步的橄欖花園裝。"],["A neighbor leaves a yummy snack","邻居留下了美味点心"],["A warm dinner to share","一顿可以分享的暖暖晚餐"],["A snug, dry little corner","一个干燥舒适的小角落"],["A wobbly moment in the city","城市里摇摇晃晃的一刻"],["A rescue nook has goodies","救援小窝里有好东西"],["A hopeful hello","充满希望的问候"],["Gain two fish cards.","获得两张鱼卡。"],["You and another kitty each gain one fish card.","你和另一只猫猫各获得一张鱼卡。"],["Take a cozy rest and lower worry.","舒适地休息一下，减少担忧。"],["Take one worry or spend a fish card.","增加一点担忧，或花一张鱼卡。"],["Add food and medical help to the shared nook.","为共享小窝增加食物和医疗用品。"],["Give one fish card to earn a home card.","送出一张鱼卡，赢得一张家的卡片。"],["A gentle city moment","温柔的城市时刻"],["what would feel kindest?","怎样做最温柔呢？"],["Accept the yummy snack (+2 fish)","接受美味点心（+2鱼卡）"],["Share with a buddy (+1 each)","和伙伴分享（各+1）"],["Take a cozy rest","舒适地休息一下"],["Be brave (+1 worry)","勇敢面对（+1担忧）"],["Use one fish card","使用一张鱼卡"],["Stock the shared rescue nook","补充共享救援小窝"],["Give one fish to a hopeful home","送一条鱼给希望之家"],["Adventure complete","冒险完成"],["Fish cards","鱼卡"],["worry","担忧"],["Food","食物"],["Medical","医疗"],["A warm little ending","温暖的小结局"],["A gentle goodbye","温柔的道别"],["Thank you for caring for your whole crew","谢谢你照顾整个猫猫小队"],["Every little look is unlocked. Your kitties are fashion stars!","每个造型都已解锁。你的猫猫都是时尚明星！"],["Pay","支付"],["style stars (tokens) to unlock","风格星星（代币）来解锁"],["friends","位朋友"],["starter gift","入门礼物"],["tokens","代币"],["Honey orange","蜜糖橙"],["Calico patches","三花斑纹"],["Moonlight gray","月光灰"],["Tuxedo cream","奶油燕尾"],["Vanilla cream","香草奶油"],["Midnight blue-black","午夜蓝黑"],["Snowy white","雪白"],["Cocoa brown","可可棕"],["Tiny moon bell","月亮小铃铛"],["Daisy ear flower","雏菊耳花"],["Paper star crown","纸星星王冠"],["Round sleepy glasses","圆圆睡眼眼镜"],["Little helper backpack","小助手背包"],["Olive leaf wreath","橄榄叶花环"],["Cherry blossom clip","樱花发夹"],["Rainbow bead collar","彩虹珠珠项圈"],["Orange Cat","橘猫"],["Calico Cat","三花猫"],["Gray Cat","灰猫"],["Tuxedo Cat","燕尾猫"],["Japan","日本"],["Greece","希腊"],["Italy","意大利"],["France","法国"],["China","中国"],["Turkey","土耳其"],["Spain","西班牙"],["Mexico","墨西哥"],["Brazil","巴西"],["South Africa","南非"],["South Korea","韩国"],["easy","简单"],["normal","普通"],["hard","困难"],["lanterns, cherry blossoms, tiled roofs","灯笼、樱花和瓦片屋顶"],["blue doors, olive trees, and a moonlit sea","蓝色门、橄榄树和月光海"],["a warm piazza, lemon trees, and a little fountain","温暖广场、柠檬树和小喷泉"],["cafe awnings, balconies, and twinkly rooftops","咖啡馆遮阳篷、阳台和闪亮屋顶"],["lantern-lit lanes, layered roofs, and garden paths","灯笼小巷、层叠屋顶和花园小径"],["market lamps, domes, and a cozy hillside lane","集市灯、圆顶和温馨山坡小路"],["bright stucco homes, flowers, and a sunny plaza","明亮灰泥房、鲜花和阳光广场"],["colourful walls, clay pots, and desert flowers","彩色墙、陶罐和沙漠花朵"],["green hills, tropical leaves, and glowing homes","绿色山丘、热带叶子和发光房屋"],["mountain silhouettes, bright houses, and wildflowers","山脉剪影、明亮房屋和野花"],["traditional eaves, modern lights, and blossoms","传统屋檐、现代灯光和花朵"],      ["Your kitty","你的猫猫"],["found a yummy snack.","找到了美味点心。"],["shared dinner.","分享了晚餐。"],      ["Your little crew begins in","你的小队开始于"],["A warm little ending","温暖的小结局"],["A gentle goodbye","温柔的道别"],["A warm homecoming","温暖的回家时刻"],["Every kitty has enough fish and a safe place to rest tonight.","每只猫猫都有足够的鱼卡，今晚也有安全的地方休息。"],["A hopeful promise","充满希望的约定"],["The night was difficult, but your kindness kept the crew together.","夜晚虽然困难，但你的温柔让小队一直在一起。"],["A rainy lesson","雨夜里的成长"],["There was not enough for everyone yet, so the crew will try again tomorrow.","现在还没有足够的资源照顾大家，小队明天会再试一次。"]
+      ["City Stray Cats","城市流浪猫"],["A tiny, twinkly comeback adventure","一场闪闪发光的小小回归冒险"],["Gentle paws, warm hearts, glowing streets","温柔的小爪爪、暖暖的心和发光的街道"],["Let's make a kitty team!","一起组建猫猫小队吧！"],["Open the cuddle wardrobe","打开抱抱衣橱"],["How to play","玩法说明"],["Choose sweet colours, dress up your little friends, and help the whole crew find safe, cozy moments.","选择可爱的颜色，为小伙伴换上漂亮衣服，帮助大家找到安全又温暖的时光。"],["Play cozy night music","播放温柔夜曲"],["Pause cozy night music","暂停温柔夜曲"],["Let's make your adorable cat crew","来制作可爱的猫猫小队吧"],["Back to the cozy menu","回到温馨菜单"],["Style stars","风格星星"],["Cozy rose coat and sparkly bow tie are starter gifts for every player. More pretty outfits and accessories can be unlocked with style stars (tokens).","玫瑰暖外套和闪亮蝴蝶结是每位玩家的入门礼物。想要更多漂亮服装和配饰，可以用风格星星（代币）解锁。"],["Choose a city map","选择城市地图"],["Cozy challenge","温馨挑战"],["Gentle stroll","轻松散步"],["Wiggly city adventure","摇摇晃晃的城市冒险"],["Big brave challenge","勇敢的大挑战"],["How many friends?","有多少位朋友？"],["Starting fish cards","初始鱼卡"],["Start our sparkly adventure","开始闪闪发光的冒险"],["Visit wardrobe","访问衣橱"],["The cuddle wardrobe","抱抱衣橱"],["Want more pretty looks? Spend your style stars (tokens) to unlock coats, capes, scarves, glasses, bells, and tiny backpacks.","想要更多漂亮造型吗？用风格星星（代币）解锁外套、斗篷、围巾、眼镜、铃铛和小背包吧。"],["How to play, little paw-friend","玩法说明，小爪爪朋友"],["Take turns choosing kind actions for your crew.","轮流为小队选择友善的行动。"],["Collect three fish cards for every kitty.","为每只猫猫收集三张鱼卡。"],["Keep every cat's worry below 3.","让每只猫猫的担忧保持在3以下。"],["Share helpful supplies and cozy breaks.","分享有用的物资，享受温暖的休息。"],["Finish together to earn style stars.","一起完成冒险，赢得风格星星。"],["Okay, let's make our kitties!","好啦，一起制作猫猫吧！"],["Your lovely crew","你可爱的猫猫小队"],["Shared rescue nook","共享救援小窝"],["Our sweet team goal","我们甜甜的团队目标"],["Gather fish cards, lower worry, and help every kitty feel safe.","收集鱼卡、减少担忧，让每只猫猫都感到安全。"],["Little neighborhood notes","街区小笔记"],["Leave this adventure","离开这次冒险"],["Back to the cozy menu","回到温馨菜单"],["Cozy rose coat","玫瑰暖外套"],["Sparkly bow tie","闪亮蝴蝶结"],["Sunny raincoat","阳光雨衣"],["Berry-soft scarf","莓果软围巾"],["Tiny hero cape","迷你英雄斗篷"],["Cloud-puff hoodie","云朵蓬蓬卫衣"],["Rescue helper vest","救援助手背心"],["Cherry blossom wrap","樱花披肩"],["Olive garden outfit","橄榄花园装"],      ["A soft rose coat for sleepy, cuddly evenings.","适合慵懒依偎夜晚的柔软玫瑰外套。"],["A sunny splash-proof coat for brave rainy walks.","適合勇敢雨中散步的陽光防水外套。"],["A berry-soft scarf that keeps whiskers warm.","讓鬍鬚保持溫暖的莓果柔軟圍巾。"],["A tiny hero cape for helpful, bouncy rescues.","適合活潑助人救援的迷你英雄斗篷。"],["A cloud-puff hoodie for calm, floaty comfort.","帶來平靜輕盈舒適感的雲朵蓬蓬衛衣。"],["A bright helper vest for proud rescue work.","適合自豪投入救援工作的明亮助手背心。"],["A cherry blossom wrap for peaceful spring strolls.","適合平靜春日散步的櫻花披肩。"],["An olive garden outfit for sunny, graceful wandering.","適合陽光優雅漫步的橄欖花園裝。"],["A neighbor leaves a yummy snack","邻居留下了美味点心"],["A warm dinner to share","一顿可以分享的暖暖晚餐"],["A snug, dry little corner","一个干燥舒适的小角落"],["A wobbly moment in the city","城市里摇摇晃晃的一刻"],["A rescue nook has goodies","救援小窝里有好东西"],["A hopeful hello","充满希望的问候"],["Gain two fish cards.","获得两张鱼卡。"],["You and another kitty each gain one fish card.","你和另一只猫猫各获得一张鱼卡。"],["Take a cozy rest and lower worry.","舒适地休息一下，减少担忧。"],["Take one worry or spend a fish card.","增加一点担忧，或花一张鱼卡。"],["Add food and medical help to the shared nook.","为共享小窝增加食物和医疗用品。"],["Give one fish card to earn a home card.","送出一张鱼卡，赢得一张家的卡片。"],["A gentle city moment","温柔的城市时刻"],["what would feel kindest?","怎样做最温柔呢？"],["Accept the yummy snack (+2 fish)","接受美味点心（+2鱼卡）"],["Share with a buddy (+1 each)","和伙伴分享（各+1）"],["Take a cozy rest","舒适地休息一下"],["Be brave (+1 worry)","勇敢面对（+1担忧）"],["Use one fish card","使用一张鱼卡"],["Stock the shared rescue nook","补充共享救援小窝"],["Give one fish to a hopeful home","送一条鱼给希望之家"],["Adventure complete","冒险完成"],["Fish cards","鱼卡"],["worry","担忧"],["Food","食物"],["Medical","医疗"],["A warm little ending","温暖的小结局"],["A gentle goodbye","温柔的道别"],["Thank you for caring for your whole crew","谢谢你照顾整个猫猫小队"],["Every little look is unlocked. Your kitties are fashion stars!","每个造型都已解锁。你的猫猫都是时尚明星！"],["Pay","支付"],["style stars (tokens) to unlock","风格星星（代币）来解锁"],["friends","位朋友"],["starter gift","入门礼物"],["tokens","代币"],["Honey orange","蜜糖橙"],["Calico patches","三花斑纹"],["Moonlight gray","月光灰"],["Tuxedo cream","奶油燕尾"],["Vanilla cream","香草奶油"],["Midnight blue-black","午夜蓝黑"],["Snowy white","雪白"],["Cocoa brown","可可棕"],["Tiny moon bell","月亮小铃铛"],["Daisy ear flower","雏菊耳花"],["Paper star crown","纸星星王冠"],["Round sleepy glasses","圆圆睡眼眼镜"],["Little helper backpack","小助手背包"],["Olive leaf wreath","橄榄叶花环"],["Cherry blossom clip","樱花发夹"],["Rainbow bead collar","彩虹珠珠项圈"],["Orange Cat","橘猫"],["Calico Cat","三花猫"],["Gray Cat","灰猫"],["Tuxedo Cat","燕尾猫"],["Japan","日本"],["Greece","希腊"],["Italy","意大利"],["France","法国"],["China","中国"],["Turkey","土耳其"],["Spain","西班牙"],["Mexico","墨西哥"],["Brazil","巴西"],["South Africa","南非"],["South Korea","韩国"],["easy","简单"],["normal","普通"],["hard","困难"],["lanterns, cherry blossoms, tiled roofs","灯笼、樱花和瓦片屋顶"],["blue doors, olive trees, and a moonlit sea","蓝色门、橄榄树和月光海"],["a warm piazza, lemon trees, and a little fountain","温暖广场、柠檬树和小喷泉"],["cafe awnings, balconies, and twinkly rooftops","咖啡馆遮阳篷、阳台和闪亮屋顶"],["lantern-lit lanes, layered roofs, and garden paths","灯笼小巷、层叠屋顶和花园小径"],["market lamps, domes, and a cozy hillside lane","集市灯、圆顶和温馨山坡小路"],["bright stucco homes, flowers, and a sunny plaza","明亮灰泥房、鲜花和阳光广场"],["colourful walls, clay pots, and desert flowers","彩色墙、陶罐和沙漠花朵"],["green hills, tropical leaves, and glowing homes","绿色山丘、热带叶子和发光房屋"],["mountain silhouettes, bright houses, and wildflowers","山脉剪影、明亮房屋和野花"],["traditional eaves, modern lights, and blossoms","传统屋檐、现代灯光和花朵"],      ["Your kitty","你的猫猫"],["found a yummy snack.","找到了美味点心。"],["shared dinner.","分享了晚餐。"],      ["Your little crew begins in","你的小队开始于"],["A warm little ending","温暖的小结局"],["A gentle goodbye","温柔的道别"],      ["A warm homecoming","温暖的回家时刻"],["Every kitty has enough fish and a safe place to rest tonight.","每只猫猫都有足够的鱼卡，今晚也有安全的地方休息。"],["A hopeful promise","充满希望的约定"],["The night was difficult, but your kindness kept the crew together.","夜晚虽然困难，但你的温柔让小队一直在一起。"],["A rainy lesson","雨夜里的成长"],["There was not enough for everyone yet, so the crew will try again tomorrow.","现在还没有足够的资源照顾大家，小队明天会再试一次。"],["🟩 Gentle stroll · 3 fish","🟩 轻松散步 · 3张鱼卡"],["🟨 Wiggly city adventure · 1 fish","🟨 摇摇晃晃的城市冒险 · 1张鱼卡"],["🟥 Big brave challenge · 0 fish","🟥 勇敢的大挑战 · 0张鱼卡"],["Gentle stroll gives your crew three fish cards. Normal adventures begin with one, while the bravest challenge begins with none.","轻松散步会给小队三张鱼卡。普通冒险从一张开始，最勇敢的挑战则没有初始鱼卡。"],["Wiggly city adventure gives your crew one fish card. Harder city maps can reduce it to zero.","摇摇晃晃的城市冒险会给小队一张鱼卡。更困难的城市地图可能会将它降为零张。"],      ["Big brave challenge gives your crew no starting fish cards. Every kind choice matters.","勇敢的大挑战不会提供初始鱼卡。每个友善的选择都很重要。"],      ["This city raises the challenge, so starting fish are reduced.","这座城市提高了挑战难度，因此初始鱼卡会减少。"],["3 fish","3张鱼卡"],["1 fish","1张鱼卡"],["0 fish","0张鱼卡"]
       ["A cheerful bow tie that makes every hello feel festive.","让每次问候都充满节日气氛的欢快蝴蝶结。"],["A soft moon bell that adds a gentle nighttime chime.","为夜晚增添轻柔铃声的月亮小铃铛。"],["A sunny daisy bloom for bright, friendly adventures.","适合明亮友好冒险的阳光雏菊花。"],["A paper star crown for a kitty who dreams big.","送给拥有大大梦想猫猫的纸星星王冠。"],["Round glasses for thoughtful naps and clever looks.","适合静心午睡和聪明造型的圆眼镜。"],["A tiny backpack for carrying treats and rescue supplies.","用来装点心和救援物资的小背包。"],["An olive leaf wreath with a peaceful garden feeling.","带来宁静花园气息的橄榄叶花环。"],["A blossom clip that brings a little springtime sparkle.","带来春日闪耀感觉的樱花发夹。"],["A rainbow bead collar full of playful color.","充满俏皮色彩的彩虹珠珠项圈。"],["A neighbor leaves a yummy snack","邻居留下了美味点心"],["A warm dinner to share","一顿可以分享的暖暖晚餐"],["A snug, dry little corner","一个干燥舒适的小角落"],["A wobbly moment in the city","城市里摇摇晃晃的一刻"],["A rescue nook has goodies","救援小窝里有好东西"],["A hopeful hello","充满希望的问候"],["Gain two fish cards.","获得两张鱼卡。"],["You and another kitty each gain one fish card.","你和另一只猫猫各获得一张鱼卡。"],["Take a cozy rest and lower worry.","舒适地休息一下，减少担忧。"],["Take one worry or spend a fish card.","增加一点担忧，或花一张鱼卡。"],["Add food and medical help to the shared nook.","为共享小窝增加食物和医疗用品。"],["Give one fish card to earn a home card.","送出一张鱼卡，赢得一张家的卡片。"],["A gentle city moment","温柔的城市时刻"],["what would feel kindest?","怎样做最温柔呢？"],["Accept the yummy snack (+2 fish)","接受美味点心（+2鱼卡）"],["Share with a buddy (+1 each)","和伙伴分享（各+1）"],["Take a cozy rest","舒适地休息一下"],["Be brave (+1 worry)","勇敢面对（+1担忧）"],["Use one fish card","使用一张鱼卡"],["Stock the shared rescue nook","补充共享救援小窝"],["Give one fish to a hopeful home","送一条鱼给希望之家"],["Adventure complete","冒险完成"],["Fish cards","鱼卡"],["worry","担忧"],["Food","食物"],["Medical","医疗"],["A warm little ending","温暖的小结局"],["A gentle goodbye","温柔的道别"],["Thank you for caring for your whole crew","谢谢你照顾整个猫猫小队"],["Every little look is unlocked. Your kitties are fashion stars!","每个造型都已解锁。你的猫猫都是时尚明星！"],["Pay","支付"],["style stars (tokens) to unlock","风格星星（代币）来解锁"],["friends","位朋友"],["starter gift","入门礼物"],["tokens","代币"],["Honey orange","蜜糖橙"],["Calico patches","三花斑纹"],["Moonlight gray","月光灰"],["Tuxedo cream","奶油燕尾"],["Vanilla cream","香草奶油"],["Midnight blue-black","午夜蓝黑"],["Snowy white","雪白"],["Cocoa brown","可可棕"],["Tiny moon bell","月亮小铃铛"],["Daisy ear flower","雏菊耳花"],["Paper star crown","纸星星王冠"],["Round sleepy glasses","圆圆睡眼眼镜"],["Little helper backpack","小助手背包"],["Olive leaf wreath","橄榄叶花环"],["Cherry blossom clip","樱花发夹"],["Rainbow bead collar","彩虹珠珠项圈"],["Orange Cat","橘猫"],["Calico Cat","三花猫"],["Gray Cat","灰猫"],["Tuxedo Cat","燕尾猫"],["Japan","日本"],["Greece","希腊"],["Italy","意大利"],["France","法国"],["China","中国"],["Turkey","土耳其"],["Spain","西班牙"],["Mexico","墨西哥"],["Brazil","巴西"],["South Africa","南非"],["South Korea","韩国"],["easy","简单"],["normal","普通"],["hard","困难"],["lanterns, cherry blossoms, tiled roofs","灯笼、樱花和瓦片屋顶"],["blue doors, olive trees, and a moonlit sea","蓝色门、橄榄树和月光海"],["a warm piazza, lemon trees, and a little fountain","温暖广场、柠檬树和小喷泉"],["cafe awnings, balconies, and twinkly rooftops","咖啡馆遮阳篷、阳台和闪亮屋顶"],["lantern-lit lanes, layered roofs, and garden paths","灯笼小巷、层叠屋顶和花园小径"],["market lamps, domes, and a cozy hillside lane","集市灯、圆顶和温馨山坡小路"],["bright stucco homes, flowers, and a sunny plaza","明亮灰泥房、鲜花和阳光广场"],["colourful walls, clay pots, and desert flowers","彩色墙、陶罐和沙漠花朵"],["green hills, tropical leaves, and glowing homes","绿色山丘、热带叶子和发光房屋"],["mountain silhouettes, bright houses, and wildflowers","山脉剪影、明亮房屋和野花"],["traditional eaves, modern lights, and blossoms","传统屋檐、现代灯光和花朵"],      ["Your kitty","你的猫猫"],["found a yummy snack.","找到了美味点心。"],["shared dinner.","分享了晚餐。"],      ["Your little crew begins in","你的小队开始于"],["A warm little ending","温暖的小结局"],["A gentle goodbye","温柔的道别"],["A warm homecoming","温暖的回家时刻"],["Every kitty has enough fish and a safe place to rest tonight.","每只猫猫都有足够的鱼卡，今晚也有安全的地方休息。"],["A hopeful promise","充满希望的约定"],["The night was difficult, but your kindness kept the crew together.","夜晚虽然困难，但你的温柔让小队一直在一起。"],["A rainy lesson","雨夜里的成长"],["There was not enough for everyone yet, so the crew will try again tomorrow.","现在还没有足够的资源照顾大家，小队明天会再试一次。"]
     ];
     const simplifiedToTraditional = Object.fromEntries([...[
@@ -528,7 +604,7 @@
     function gameText(text) {
       if (language === "en") return text;
       const kittyMatch = text.match(/^(.+)'s kitty$/);
-      if (kittyMatch) return `${kittyMatch[1] === "Kitty 1" ? "貓貓1" : kittyMatch[1] === "Kitty 2" ? "貓貓2" : kittyMatch[1]}的貓貓`;
+      if (kittyMatch) return `${kittyMatch[1]}的貓貓`;
       const statusMatch = text.match(/^(.+), what would feel kindest\?$/);
       if (statusMatch) {
         const statusName = /^Kitty (\d+)$/.test(statusMatch[1]) ? `貓貓${statusMatch[1].match(/\d+/)[0]}` : statusMatch[1];
@@ -573,6 +649,8 @@
       textNodes.forEach(node => { node.nodeValue = translateText(node.nodeValue); });
       document.querySelectorAll("input[placeholder]").forEach(input => { input.placeholder = translateText(input.placeholder); });
       document.querySelectorAll("[aria-label]").forEach(node => { node.setAttribute("aria-label", translateText(node.getAttribute("aria-label"))); });
+      renderDifficultyText();
+      syncDifficulty();
       $("#langEn")?.classList.toggle("selected", language === "en"); $("#langZh")?.classList.toggle("selected", language === "zh"); $("#langZhHant")?.classList.toggle("selected", language === "zh-Hant");
     }
 
@@ -658,6 +736,7 @@
 
     function renderScene(element, map) {
       element.dataset.map = map.name;
+      element.dataset.theme = map.theme;
       const heights = [55, 82, 65, 98, 72, 88, 59, 76];
       const sceneLabel = translateText(`${map.name} · ${map.tier} city`);
       element.innerHTML = `
@@ -672,6 +751,7 @@
       const map = selectedMap();
       renderScene($("#setupScene"), map); renderScene($("#gameScene"), map);
       $("#mapDescription").textContent = translateText(`${map.flag} ${map.name} is full of ${map.detail}.`);
+      syncDifficulty();
       applyLanguage();
     }
 
@@ -781,8 +861,8 @@
       $("#result").classList.remove("hidden"); $("#resultHome").onclick = () => show("title");
       $("#event").innerHTML = `<h2>${gameText(ending[0])}</h2><p>${gameText("Thank you for caring for your whole crew")} 💙</p>`; updateBoard();
     }
-    function startGame() { const cards = [...$("#setups").children]; players = cards.map((card, index) => ({ name: card.querySelector(".name").value.trim() || `Kitty ${index + 1}`, cat: { name: ["Orange Cat","Calico Cat","Gray Cat","Tuxedo Cat"][index], color: card.querySelector(".colour-choice.selected").dataset.fur }, outfit: card.querySelector(".outfit").value, accessory: card.querySelector(".accessory").value, cards: Math.max(0, Math.min(8, Number($("#starting").value) || 0)), worry: 0 })); turn = 0; turns = 0; ended = false; notes = []; station = { food:0, medical:0 }; $("#log").innerHTML = ""; $("#result").className = "result hidden"; $("#badge").textContent = `${selectedMap().flag} ${selectedMap().name}`; show("game"); updateScenes(); log(`Your little crew begins in ${selectedMap().name}.`); drawEvent(); }
-    $("#mapSelect").innerHTML = maps.map(map => `<option value="${map.name}">${map.flag} ${map.name}</option>`).join(""); $("#mapSelect").onchange = updateScenes; $("#musicToggle").onclick = toggleMusic; $("#langEn").onclick = () => { localStorage.setItem("cityCatsLanguage", "en"); location.reload(); }; $("#langZh").onclick = () => { localStorage.setItem("cityCatsLanguage", "zh"); location.reload(); }; $("#langZhHant").onclick = () => { localStorage.setItem("cityCatsLanguage", "zh-Hant"); location.reload(); }; $("#play").onclick = () => { renderSetups(); show("setup"); updateScenes(); }; $("#wardrobe").onclick = () => { renderShop(); show("wardrobeScreen"); }; $("#how").onclick = () => show("howScreen"); $("#howPlay").onclick = () => { renderSetups(); show("setup"); }; $("#setupWardrobe").onclick = () => { renderShop(); show("wardrobeScreen"); }; $("#start").onclick = startGame; $("#leave").onclick = () => { ended = true; show("title"); }; document.querySelectorAll(".home").forEach(button => button.onclick = () => show("title"));
+    function startGame() { syncDifficulty(); const cards = [...$("#setups").children]; players = cards.map((card, index) => ({ name: card.querySelector(".name").value.trim() || defaultKittyName(index), cat: { name: ["Orange Cat","Calico Cat","Gray Cat","Tuxedo Cat"][index], color: card.querySelector(".colour-choice.selected").dataset.fur }, outfit: card.querySelector(".outfit").value, accessory: card.querySelector(".accessory").value, cards: Math.max(0, Math.min(8, Number($("#starting").value) || 0)), worry: 0 })); turn = 0; turns = 0; ended = false; notes = []; station = { food:0, medical:0 }; $("#log").innerHTML = ""; $("#result").className = "result hidden"; $("#badge").textContent = `${selectedMap().flag} ${selectedMap().name}`; show("game"); updateScenes(); log(`Your little crew begins in ${selectedMap().name}.`); drawEvent(); }
+    $("#mapSelect").innerHTML = maps.map(map => `<option value="${map.name}">${map.flag} ${map.name}</option>`).join(""); $("#mapSelect").onchange = updateScenes; $("#difficulty").onchange = syncDifficulty; $("#musicToggle").onclick = toggleMusic; $("#langEn").onclick = () => { localStorage.setItem("cityCatsLanguage", "en"); location.reload(); }; $("#langZh").onclick = () => { localStorage.setItem("cityCatsLanguage", "zh"); location.reload(); }; $("#langZhHant").onclick = () => { localStorage.setItem("cityCatsLanguage", "zh-Hant"); location.reload(); }; $("#play").onclick = () => { renderSetups(); show("setup"); updateScenes(); }; $("#wardrobe").onclick = () => { renderShop(); show("wardrobeScreen"); }; $("#how").onclick = () => show("howScreen"); $("#howPlay").onclick = () => { renderSetups(); show("setup"); }; $("#setupWardrobe").onclick = () => { renderShop(); show("wardrobeScreen"); }; $("#start").onclick = startGame; $("#leave").onclick = () => { ended = true; show("title"); }; document.querySelectorAll(".home").forEach(button => button.onclick = () => show("title"));
     document.querySelectorAll(".title-cat-slot").forEach((slot, index) => {
       const canvas = makeCanvas(slot.dataset.fur, "coat", "bowtie", "title-cat");
       canvas.setAttribute("role", "button"); canvas.setAttribute("tabindex", "0"); canvas.setAttribute("aria-label", `Pet cat ${index + 1}`);
