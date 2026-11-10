@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101f3e">
+  <title>City Stray Cats: The Cat's Comeback</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --ink: #fff7f1;
+      --muted: #c8d7e8;
+      --night: #081426;
+      --navy: #101f3e;
+      --blue: #2b6591;
+      --brown: #604438;
+      --green: #2c715f;
+      --pink: #f5a9c5;
+      --gold: #ffd889;
+      --mint: #91e0bd;
+      --panel: #122443e8;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 12px;
+      overflow-x: hidden;
+      background: var(--night);
+      color: var(--ink);
+      font: 16px/1.5 system-ui, sans-serif;
+      text-shadow: 0 0 8px #9ed5f433;
+    }
+    h1, h2, h3, p, label, strong, small, li, span, button, option, .caption, .note, .muted, .status, .event-text, .event-title, .event-type, .player-head, .stats {
+      text-shadow: 0 0 7px #9ed5f455;
+    }
+    button, input, select { font: inherit; }
+    button {
+      min-height: 44px;
+      padding: 10px 15px;
+      border: 1px solid #fff8;
+      border-radius: 999px;
+      background: var(--pink);
+      color: #382943;
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 4px #a95f7d;
+      transition: transform .15s, filter .15s, box-shadow .15s;
+      touch-action: manipulation;
+    }
+    button:hover { filter: brightness(1.08); transform: translateY(-2px); }
+    button:active { transform: translateY(2px); box-shadow: 0 2px #a95f7d; }
+    button.secondary { background: #b7c8f1; box-shadow: 0 4px #6576ab; }
+    button.good { background: var(--mint); box-shadow: 0 4px #4d9278; }
+    button.blue { background: #9ed5f4; box-shadow: 0 4px #4f87ab; }
+    button.danger { background: #f19aa4; box-shadow: 0 4px #a65d67; }
+    button:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+    input, select {
+      width: 100%;
+      margin-top: 5px;
+      padding: 10px 12px;
+      border: 1px solid #fff4;
+      border-radius: 13px;
+      background: #08172e;
+      color: var(--ink);
+    }
+    main { position: relative; z-index: 1; width: min(1080px, 100%); margin: auto; }
+    h1, h2, h3 { line-height: 1.18; }
+    h1 { margin: 0; font-size: clamp(2.2rem, 8vw, 4.2rem); }
+    h2 { margin-top: 0; }
+    .hidden { display: none !important; }
+    .note, .muted { color: var(--muted); font-size: .92rem; }
+    .center { text-align: center; }
+
+    .night-sky {
+      position: fixed;
+      z-index: -2;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 65%, #2f7b7555, transparent 25%),
+        radial-gradient(circle at 80% 18%, #526dba66, transparent 28%),
+        linear-gradient(#081426, #112750 62%, #3b2d2c);
+    }
+    .night-sky::before {
+      content: "✦   ·    ✧       ·   ✦       ·    ✧";
+      position: absolute;
+      inset: 8% 2%;
+      color: #fff1bd;
+      font-size: 20px;
+      letter-spacing: 24px;
+      opacity: .65;
+      animation: shimmer 4s ease-in-out infinite alternate;
+    }
+    .night-sky::after {
+      content: "·  ˚   ·    ˚  ·   ˚     ·  ˚   ·    ˚  ·   ˚    ·";
+      position: absolute;
+      inset: -10% 0 0;
+      color: #e8f5ffcc;
+      font-size: 19px;
+      letter-spacing: 22px;
+      line-height: 3.8;
+      white-space: pre-wrap;
+      opacity: .7;
+      text-shadow: 0 0 7px #d8f3ff;
+      animation: snowfall 12s linear infinite;
+    }
+    .moon {
+      isolation: isolate;
+      position: absolute;
+      top: 7%;
+      right: 12%;
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: #fff1c1;
+      box-shadow: inset -8px -5px 0 #f6d99555, inset 7px 8px 0 #fff8d955;
+    }
+    .moon::before {
+      content: "";
+      position: absolute;
+      z-index: -1;
+      inset: -42px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffeab088 0 21%, #ffeab044 42%, transparent 72%);
+      filter: blur(7px);
+    }
+    .glow {
+      position: absolute;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background: #8dffc844;
+      filter: blur(15px);
+      animation: glow 4s ease-in-out infinite alternate;
+    }
+    .glow.one { left: 8%; bottom: 18%; }
+    .glow.two { right: 18%; bottom: 27%; animation-delay: -2s; }
+    @keyframes shimmer { to { opacity: .25; } }
+    @keyframes snowfall { to { transform: translate3d(-28px, 110vh, 0); } }
+    @keyframes glow { to { transform: translateY(-16px) scale(1.15); opacity: .5; } }
+    @keyframes bob { 50% { transform: translateY(-6px) rotate(3deg); } }
+    @keyframes pet-bob { 35% { transform: translateY(-8px) rotate(-4deg); } 70% { transform: translateY(1px) rotate(3deg); } }
+    @keyframes enter { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+    @keyframes drift { to { transform: translateX(70px); } }
+    @keyframes flicker { 50% { opacity: .65; } }
+
+    .panel, .title-card {
+      margin: 12px 0;
+      padding: clamp(15px, 3vw, 24px);
+      border: 1px solid #b5d8ff44;
+      border-radius: 25px;
+      background: linear-gradient(145deg, #163057e8, #14253ee8);
+      box-shadow: 0 18px 50px #020711aa, inset 0 0 24px #78d7ba0b;
+      backdrop-filter: blur(12px);
+      animation: enter .35s ease-out;
+    }
+    .title-card { padding: 0; overflow: hidden; }
+    .cover {
+      position: relative;
+      display: grid;
+      min-height: 330px;
+      place-items: center;
+      overflow: hidden;
+      padding: 24px;
+      text-align: center;
+      background:
+        linear-gradient(180deg, #173b70 0%, #2b6682 54%, #6f4939 100%);
+    }
+    .cover::before {
+      content: "🌙";
+      position: absolute;
+      top: 25px;
+      right: 8%;
+      z-index: 0;
+      font-size: 4.5rem;
+      opacity: .8;
+      filter: drop-shadow(0 0 18px #ffeab0);
+      animation: bob 4s infinite;
+    }
+    .cover::after {
+      content: "🏠  🏮  🌿  🐈  🌿  🏮  🏠";
+      position: absolute;
+      right: 0;
+      bottom: 35px;
+      left: 0;
+      color: #d3b88a;
+      font-size: clamp(2rem, 7vw, 4.2rem);
+      letter-spacing: 6px;
+      opacity: .9;
+    }
+    .cover > div { position: relative; z-index: 1; }
+    .cover h1, .cover p {
+      font-family: Georgia, serif;
+      text-shadow: 0 3px 14px #061328;
+    }
+    .cover p { font-size: 1.3rem; font-style: italic; }
+    .title-content { padding: 20px; text-align: center; }
+    .title-cats { display: flex; justify-content: center; align-items: end; gap: 5px; min-height: 118px; color: #ffe8c7; }
+    .title-cat-slot { display: inline-flex; align-items: end; animation: bob 2.5s infinite; }
+    .title-cat-slot { cursor: pointer; touch-action: manipulation; }
+    .title-cat-slot.petted { animation: pet-bob .42s ease-out; }
+    .title-cat-slot:nth-child(2) { animation-delay: -.7s; }
+    .title-cat-slot:nth-child(3) { animation-delay: -1.3s; }
+    .title-cat-slot .pixel { width: 108px; height: 108px; border: 0; background: transparent; box-shadow: none; }
+    .tiny {
+      display: inline-block;
+      padding: 6px 12px;
+      border: 1px solid #fff5;
+      border-radius: 999px;
+      background: #fff2;
+      font-size: .86rem;
+    }
+    .button-stack, .shop-list, .players, .actions { display: grid; gap: 10px; }
+    .button-stack { width: min(340px, 100%); margin: 18px auto; }
+    .music-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      background: #79b9e8;
+      box-shadow: 0 4px #477da8;
+    }
+    .language-picker { display: flex; justify-content: center; gap: 8px; margin: 12px auto 0; }
+    .language-picker button { min-height: 36px; padding: 7px 12px; background: #527fae; color: var(--ink); box-shadow: 0 3px #315778; }
+    .language-picker button.selected { background: var(--gold); color: #382943; box-shadow: 0 3px #b58b45; }
+    .top-actions, .setup-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 12px;
+    }
+    .setup-actions { justify-content: center; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    label { display: block; color: var(--muted); font-size: .92rem; }
+
+    .country-scene {
+      --sky: #1c5681;
+      --ground: #4a352e;
+      --far: #244b63;
+      position: relative;
+      min-height: 225px;
+      overflow: hidden;
+      margin: 14px 0;
+      border: 1px solid #b5d8ff55;
+      border-radius: 21px;
+      isolation: isolate;
+      background: linear-gradient(180deg, var(--sky), #456d76 64%, var(--ground));
+      box-shadow: inset 0 0 35px #b5f7de22, 0 0 22px #73d8bd18;
+    }
+    .country-scene::before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      pointer-events: none;
+      opacity: .34;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 7px, #b8e4e044 7px 9px, transparent 9px 16px),
+        repeating-linear-gradient(0deg, transparent 0 7px, #091a2b33 7px 9px, transparent 9px 16px);
+      mix-blend-mode: screen;
+    }
+    .country-scene[data-map="Japan"] { --sky:#244f82; --ground:#49313c; --far:#3e426e; }
+    .country-scene[data-map="Greece"] { --sky:#24638b; --ground:#594438; --far:#2d6876; }
+    .country-scene[data-map="Italy"] { --sky:#315e83; --ground:#694735; --far:#67506b; }
+    .country-scene[data-map="France"] { --sky:#2b527d; --ground:#403d55; --far:#536080; }
+    .country-scene[data-map="Brazil"] { --sky:#175b69; --ground:#315545; --far:#237b68; }
+    .country-scene[data-map="Mexico"] { --sky:#396985; --ground:#68452f; --far:#8b6541; }
+    .country-scene[data-map="China"] { --sky:#284d7c; --ground:#4b303a; --far:#6c4a60; }
+    .country-scene[data-map="Turkey"] { --sky:#275776; --ground:#55403b; --far:#674c5b; }
+    .country-scene[data-map="Spain"] { --sky:#3a6680; --ground:#684d38; --far:#895c46; }
+    .country-scene[data-map="South Africa"] { --sky:#365b76; --ground:#514b3d; --far:#6d654a; }
+    .country-scene[data-map="South Korea"] { --sky:#263e70; --ground:#3d344e; --far:#485780; }
+    .scene-stars { position: absolute; inset: 15px; color: #fff1bd; opacity: .65; letter-spacing: 26px; }
+    .scene-sun { position: absolute; top: 25px; right: 13%; width: 48px; height: 48px; border-radius: 50%; background: #ffe7a7; box-shadow: 0 0 25px #ffe7a7; }
+    .scene-cloud { position: absolute; top: 40px; left: 12%; font-size: 2rem; opacity: .45; animation: drift 16s linear infinite alternate; }
+    .scene-hills { position: absolute; right: -5%; bottom: 38px; left: -5%; height: 90px; background: var(--far); clip-path: polygon(0 70%, 15% 35%, 27% 65%, 42% 18%, 57% 63%, 70% 28%, 84% 67%, 100% 40%, 100% 100%, 0 100%); opacity: .85; }
+    .scene-buildings { position: absolute; right: 0; bottom: 34px; left: 0; display: flex; align-items: end; justify-content: space-around; height: 120px; }
+    .building { position: relative; width: var(--w); height: var(--h); border-radius: 5px 5px 0 0; background: #18395b; box-shadow: inset 6px 0 #fff1; }
+    .building:nth-child(even) { background: #274c55; }
+    .building::before { content: ""; position: absolute; inset: 12px 7px; background: repeating-linear-gradient(90deg, transparent 0 11px, #ffd98399 11px 16px, transparent 16px 25px), repeating-linear-gradient(0deg, transparent 0 15px, #ffd98377 15px 20px, transparent 20px 30px); }
+    .building.roof::after { content: ""; position: absolute; top: -15px; left: -5px; width: calc(100% + 10px); height: 17px; background: #875548; clip-path: polygon(0 100%, 50% 0, 100% 100%); }
+    .scene-landmarks { position: absolute; right: 16%; bottom: 35px; left: 16%; display: flex; justify-content: space-between; align-items: end; z-index: 2; pointer-events: none; }
+    .landmark { font-size: clamp(1.8rem, 6vw, 3.2rem); filter: drop-shadow(0 3px 4px #08142699); animation: bob 3.6s infinite alternate; }
+    .landmark:nth-child(2) { animation-delay: -.9s; }
+    .landmark:nth-child(3) { animation-delay: -1.8s; }
+    .scene-label { position: absolute; z-index: 4; top: 10px; left: 10px; max-width: calc(100% - 20px); padding: 5px 11px; border: 1px solid #fff8; border-radius: 999px; background: #10233ccc; font-weight: 850; }
+    .scene-lamp { position: absolute; z-index: 3; right: 9%; bottom: 36px; width: 5px; height: 120px; background: #18243a; }
+    .scene-lamp::before { content: ""; position: absolute; top: -5px; left: -10px; width: 25px; height: 10px; border-radius: 8px; background: #ffe29a; box-shadow: 0 0 12px #ffe29a, 0 0 35px #87dbff; animation: flicker 4s infinite; }
+    .scene-road { position: absolute; z-index: 3; right: 0; bottom: 0; left: 0; height: 42px; border-top: 2px solid #ffe6bc66; background: linear-gradient(#71595a, #352f3f); }
+    .scene-road::before {
+      content: "▦  ▦  ▦  ▦  ▦  ▦  ▦  ▦  ▦";
+      position: absolute;
+      inset: 9px 0 auto;
+      color: #d7b89755;
+      font-size: 15px;
+      letter-spacing: 12px;
+      white-space: nowrap;
+    }
+    .scene-pixel-grid {
+      position: absolute;
+      z-index: 2;
+      right: 0;
+      bottom: 34px;
+      left: 0;
+      height: 33px;
+      background:
+        linear-gradient(135deg, transparent 45%, #8cd0a855 46% 52%, transparent 53%) 0 0 / 24px 18px,
+        linear-gradient(45deg, transparent 45%, #8cd0a833 46% 52%, transparent 53%) 12px 0 / 24px 18px;
+      opacity: .7;
+    }
+    .scene-weather { position: absolute; z-index: 4; inset: 0; pointer-events: none; color: #e5f7ff99; font-size: 16px; letter-spacing: 30px; text-shadow: 0 0 8px currentColor; animation: weatherDrift 9s linear infinite; }
+    .scene-weather::before { content: "·   ✧   ·  ❄  ·   ✧   ·  ❄  ·   ✧"; }
+    @keyframes weatherDrift { to { transform: translate3d(35px, 40px, 0); opacity: .35; } }
+
+    .players-setup { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+    .setup-player, .player { padding: 13px; border: 1px solid #fff3; border-radius: 17px; background: #ffffff0b; }
+    .colour-picker { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 6px; }
+    .colour-choice { display: inline-flex; align-items: center; gap: 6px; padding: 7px 9px; border: 1px solid #fff4; border-radius: 999px; background: #fff1; color: var(--ink); box-shadow: none; font-size: .78rem; }
+    .colour-choice.selected { border-color: var(--gold); background: #ffe29a24; box-shadow: 0 0 0 2px #ffe29a22; }
+    .swatch { width: 18px; height: 18px; border: 2px solid #fffa; border-radius: 50%; box-shadow: inset 0 0 0 2px #0002; }
+    .pixel-showcase { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 10px; border: 1px solid #fff3; border-radius: 16px; background: #08172e99; }
+    .pixel { display: block; flex: 0 0 auto; width: 192px; height: 192px; image-rendering: pixelated; image-rendering: crisp-edges; border: 1px solid #fff3; border-radius: 12px; background: #071226; box-shadow: 0 0 18px #7ce0c233; }
+    .shop-preview { width: 128px; height: 128px; }
+    .pixel-copy { min-width: 0; }
+    .pixel-name { font-weight: 850; }
+    .caption { color: var(--muted); font-size: .82rem; }
+
+    .topline { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; color: var(--muted); font-weight: 750; }
+    .progress-wrap { height: 12px; margin: 12px 0 16px; overflow: hidden; border-radius: 99px; background: #fff2; }
+    .progress { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--mint), var(--gold)); transition: width .3s; box-shadow: 0 0 14px #91e0bd99; }
+    .board { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(245px, .8fr); gap: 14px; }
+    .event-card { min-height: 215px; padding: 18px; border: 1px solid #fff3; border-radius: 22px; background: linear-gradient(145deg, #23698add 0%, #344d8ddd 52%, #315c5cdd 100%); box-shadow: inset 0 0 28px #8cdcff18, 0 10px 24px #02071155; }
+    .event-icon { font-size: 2.6rem; animation: bob 2.5s infinite; }
+    .event-type { color: var(--gold); font-size: .78rem; font-weight: 900; text-transform: uppercase; }
+    .event-title { margin: 6px 0; font-size: 1.35rem; }
+    .event-text { color: #e4eef7; }
+    .situation { position: relative; display: grid; place-items: center; min-height: 125px; overflow: hidden; margin: 12px 0; border: 1px solid #fff3; border-radius: 18px; background: linear-gradient(145deg, #246b83, #4a4b86 58%, #315e62); box-shadow: inset 0 0 24px #83e6dc22; }
+    .situation::before { content: ""; position: absolute; inset: auto 0 0; height: 34%; background: #10233caa; border-top: 1px solid #fff2; }
+    .situation-art { position: relative; z-index: 1; font-size: clamp(2.4rem, 8vw, 3.4rem); animation: bob 2.5s infinite; }
+    .situation-label { position: absolute; z-index: 2; right: 8px; bottom: 7px; padding: 3px 8px; border: 1px solid #fff3; border-radius: 999px; background: #08172ecc; font-size: .74rem; }
+    .player.active { border-color: var(--gold); box-shadow: 0 0 20px #ffe29a2b; }
+    .player-head { display: flex; justify-content: space-between; gap: 8px; font-weight: 850; }
+    .stats { margin-top: 5px; color: var(--muted); font-size: .86rem; }
+    .status, .result, .knowledge { margin-top: 12px; padding: 13px; border: 1px solid #fff3; border-radius: 16px; background: #08172ed9; }
+    .result.win { background: #163f38df; border-color: var(--mint); }
+    .result.loss { background: #4b2937df; border-color: #ff9aa6; }
+    .lower { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .log { max-height: 160px; overflow: auto; color: var(--muted); }
+    .shop-item { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 11px; border: 1px solid #fff3; border-radius: 15px; background: #ffffff0b; }
+
+    @media (max-width: 700px) {
+      body { padding: 8px; }
+      .grid, .players-setup, .board, .lower { grid-template-columns: 1fr; }
+      .panel { padding: 14px; }
+      .pixel { width: 136px; height: 136px; }
+      .title-cat-slot .pixel { width: 84px; height: 84px; }
+      .shop-preview { width: 100px; height: 100px; }
+      .pixel-showcase { gap: 8px; padding: 9px; }
+      .top-actions > * { flex: 1 1 100%; text-align: center; }
+      .actions, .setup-actions { display: grid; grid-template-columns: 1fr; }
+      .scene { min-height: 180px; }
+      .colour-choice { min-height: 42px; }
+      .player-head { flex-direction: column; gap: 2px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="night-sky" aria-hidden="true"><div class="moon"></div><div class="glow one"></div><div class="glow two"></div></div>
+  <main>
+    <section id="title" class="title-card">
+      <div class="cover"><div><h1>City Stray Cats</h1><p>A tiny, twinkly comeback adventure</p></div></div>
+      <div class="title-content">
+        <div class="title-cats" aria-label="Three cute pixel cats"><span class="title-cat-slot" data-fur="orange"></span><span class="title-cat-slot" data-fur="black"></span><span class="title-cat-slot" data-fur="calico"></span></div>
+        <span class="tiny">🌙 Gentle paws, warm hearts, glowing streets 🌿</span>
+        <div class="button-stack">
+          <button id="play">🐾 Let's make a kitty team!</button>
+          <button id="wardrobe" class="secondary">🎀 Open the cuddle wardrobe</button>
+          <button id="how" class="good">📖 How to play</button>
+        </div>
+        <button id="musicToggle" class="music-control" type="button" aria-pressed="false">🎵 Play cozy night music</button>
+        <div class="language-picker" aria-label="Language"><button id="langEn" type="button">English</button><button id="langZh" type="button">简体中文</button><button id="langZhHant" type="button">繁體中文</button></div>
+        <p class="note">Choose sweet colours, dress up your little friends, and help the whole crew find safe, cozy moments.</p>
+      </div>
+    </section>
+
+    <section id="setup" class="panel hidden">
+      <div class="top-actions"><button class="secondary home">← Back to the cozy menu</button><strong>✨ Style stars: <span class="wallet">0</span></strong></div>
+      <h2>Let's make your adorable cat crew 🐾</h2>
+      <p class="note">🎁 Cozy rose coat and sparkly bow tie are starter gifts for every player. More pretty outfits and accessories can be unlocked with style stars (tokens).</p>
+      <div class="grid">
+        <label>Choose a city map<select id="mapSelect"></select></label>
+        <label>Cozy challenge<select id="difficulty"><option value="easy">🟩 Gentle stroll</option><option value="normal" selected>🟨 Wiggly city adventure</option><option value="hard">🟥 Big brave challenge</option></select></label>
+        <div><label>How many friends?</label><div id="count" class="colour-picker"></div></div>
+        <label>Starting fish cards<input id="starting" type="number" min="0" max="8" value="2"></label>
+      </div>
+      <div id="setupScene" class="country-scene"></div>
+      <p id="mapDescription" class="note"></p>
+      <div id="setups" class="players-setup"></div>
+      <div class="setup-actions"><button id="start" class="good">Start our sparkly adventure ✨</button><button id="setupWardrobe" class="secondary">Visit wardrobe</button></div>
+    </section>
+
+    <section id="wardrobeScreen" class="panel hidden">
+      <div class="top-actions"><button class="secondary home">← Back to the cozy menu</button><strong>🎀 Style stars: <span class="wallet">0</span></strong></div>
+      <h2>The cuddle wardrobe 🌸</h2>
+      <p class="note">🎁 Cozy rose coat and sparkly bow tie are starter gifts. Want more pretty looks? Spend your style stars (tokens) to unlock coats, capes, scarves, glasses, bells, and tiny backpacks.</p>
+      <div id="shop" class="shop-list"></div>
+    </section>
+
+    <section id="howScreen" class="panel hidden">
+      <div class="top-actions"><button class="secondary home">← Back to the cozy menu</button></div>
+      <h2>How to play, little paw-friend 📖</h2>
+      <p>Take turns choosing kind actions for your crew.</p>
+      <ul><li>Collect three fish cards for every kitty.</li><li>Keep every cat's worry below 3.</li><li>Share helpful supplies and cozy breaks.</li><li>Finish together to earn style stars.</li></ul>
+      <button id="howPlay" class="good">Okay, let's make our kitties!</button>
+    </section>
+
+    <section id="game" class="hidden">
+      <section class="panel">
+        <div class="top-actions"><button id="leave" class="secondary">← Leave this adventure</button><span id="badge" class="tiny"></span></div>
+        <div class="topline"><span id="round"></span><span id="team"></span><span id="turn"></span></div>
+        <div class="progress-wrap"><div id="progress" class="progress"></div></div>
+        <div id="result" class="result hidden"></div>
+        <div id="gameScene" class="country-scene"></div>
+        <div class="board"><section><div id="event" class="event-card"></div><div id="situation" class="situation"></div><div id="status" class="status"></div></section><aside><h2>Your lovely crew 🐈</h2><div id="players" class="players"></div><div class="status"><strong>🤝 Shared rescue nook</strong><div id="station"></div></div></aside></div>
+      </section>
+      <div class="lower"><section class="panel"><h3>Our sweet team goal 🌟</h3><p class="note">Gather fish cards, lower worry, and help every kitty feel safe.</p></section><section class="panel"><h3>Little neighborhood notes</h3><ul id="log" class="log"></ul></section></div>
+    </section>
+  </main>
+
+  <script>
+    "use strict";
+    const $ = selector => document.querySelector(selector);
+    const screens = ["title", "setup", "wardrobeScreen", "howScreen", "game"];
+    const maps = [
+      { name:"Japan", flag:"🇯🇵", tier:"easy", detail:"lanterns, cherry blossoms, tiled roofs", landmarks:["🏯","🌸","🏮"] },
+      { name:"Greece", flag:"🇬🇷", tier:"easy", detail:"blue doors, olive trees, and a moonlit sea", landmarks:["🏛️","🌊","🫒"] },
+      { name:"Italy", flag:"🇮🇹", tier:"easy", detail:"a warm piazza, lemon trees, and a little fountain", landmarks:["⛲","🍋","🏛️"] },
+      { name:"France", flag:"🇫🇷", tier:"normal", detail:"cafe awnings, balconies, and twinkly rooftops", landmarks:["🗼","🌷","🏘️"] },
+      { name:"China", flag:"🇨🇳", tier:"normal", detail:"lantern-lit lanes, layered roofs, and garden paths", landmarks:["🏮","🏯","🌿"] },
+      { name:"Turkey", flag:"🇹🇷", tier:"normal", detail:"market lamps, domes, and a cozy hillside lane", landmarks:["🕌","🌙","🏘️"] },
+      { name:"Spain", flag:"🇪🇸", tier:"normal", detail:"bright stucco homes, flowers, and a sunny plaza", landmarks:["🌞","🌺","🏘️"] },
+      { name:"Mexico", flag:"🇲🇽", tier:"hard", detail:"colourful walls, clay pots, and desert flowers", landmarks:["🌵","🌼","🏘️"] },
+      { name:"Brazil", flag:"🇧🇷", tier:"hard", detail:"green hills, tropical leaves, and glowing homes", landmarks:["🌴","🌺","🏙️"] },
+      { name:"South Africa", flag:"🇿🇦", tier:"hard", detail:"mountain silhouettes, bright houses, and wildflowers", landmarks:["⛰️","🌼","🏙️"] },
+      { name:"South Korea", flag:"🇰🇷", tier:"hard", detail:"traditional eaves, modern lights, and blossoms", landmarks:["🏯","🌸","🏙️"] }
+    ];
+    const furColours = [
+      ["orange","Honey orange","#e9a35e"],["calico","Calico patches","#d9775d"],["gray","Moonlight gray","#b9b9d1"],["tuxedo","Tuxedo cream","#eee8f5"],
+      ["cream","Vanilla cream","#f5dfb8"],["black","Midnight blue-black","#342b43"],["white","Snowy white","#fffaf0"],["brown","Cocoa brown","#9a624d"]
+    ];
+    const outfits = [
+      ["coat","Cozy rose coat",0,"coat","🧥","warm, cuddly, and ready for gentle naps"],
+      ["raincoat","Sunny raincoat",4,"raincoat","🌦️","bright, brave, and splash-ready"],
+      ["scarf","Berry-soft scarf",5,"scarf","🧣","snug, loved, and softly wrapped"],
+      ["cape","Tiny hero cape",7,"cape","🦸","bold, bouncy, and ready to help"],
+      ["hoodie","Cloud-puff hoodie",8,"hoodie","☁️","calm, floaty, and extra cozy"],
+      ["vest","Rescue helper vest",9,"vest","🦺","proud, useful, and full of courage"],
+      ["japan","Cherry blossom wrap",0,"japan","🌸","peaceful, graceful, and spring-soft"],
+      ["greece","Olive garden outfit",0,"greece","🫒","sunny, peaceful, and garden-happy"]
+    ];
+    const accessories = [
+      ["bowtie","Sparkly bow tie",0,"bowtie","🎀"],["bell","Tiny moon bell",2,"bell","🔔"],["flower","Daisy ear flower",3,"flower","🌼"],["crown","Paper star crown",5,"crown","👑"],
+      ["glasses","Round sleepy glasses",6,"glasses","👓"],["backpack","Little helper backpack",7,"backpack","🎒"],["olive","Olive leaf wreath",0,"olive","🫒"],["cherry","Cherry blossom clip",0,"cherry","🌸"],["beads","Rainbow bead collar",0,"beads","🧿"]
+    ];
+    const events = [
+      ["food","🥫","A neighbor leaves a yummy snack","Gain two fish cards."],["share","🍲","A warm dinner to share","You and another kitty each gain one fish card."],
+      ["shelter","🏠","A snug, dry little corner","Take a cozy rest and lower worry."],["crisis","🌧️","A wobbly moment in the city","Take one worry or spend a fish card."],
+      ["supply","🧺","A rescue nook has goodies","Add food and medical help to the shared nook."],["adoption","🏡","A hopeful hello","Give one fish card to earn a home card."]
+    ];
+    const defaults = { outfits:["coat"], accessories:["bowtie"], tokens:0 };
+    let saveData = { ...defaults };
+    try { saveData = { ...defaults, ...JSON.parse(localStorage.getItem("cityCatsSave") || "{}") }; } catch {}
+    let players = [], turn = 0, turns = 0, ended = false, notes = [], station = { food:0, medical:0 };
+    let language = ["en", "zh", "zh-Hant"].includes(localStorage.getItem("cityCatsLanguage")) ? localStorage.getItem("cityCatsLanguage") : "en";
+    const zhPairs = [
+      ["City Stray Cats","城市流浪猫"],["A tiny, twinkly comeback adventure","一场闪闪发光的小小回归冒险"],["Gentle paws, warm hearts, glowing streets","温柔的小爪爪、暖暖的心和发光的街道"],["Let's make a kitty team!","一起组建猫猫小队吧！"],["Open the cuddle wardrobe","打开抱抱衣橱"],["How to play","玩法说明"],["Choose sweet colours, dress up your little friends, and help the whole crew find safe, cozy moments.","选择可爱的颜色，为小伙伴换上漂亮衣服，帮助大家找到安全又温暖的时光。"],["Play cozy night music","播放温柔夜曲"],["Pause cozy night music","暂停温柔夜曲"],["Let's make your adorable cat crew","来制作可爱的猫猫小队吧"],["Back to the cozy menu","回到温馨菜单"],["Style stars","风格星星"],["Cozy rose coat and sparkly bow tie are starter gifts for every player. More pretty outfits and accessories can be unlocked with style stars (tokens).","玫瑰暖外套和闪亮蝴蝶结是每位玩家的入门礼物。想要更多漂亮服装和配饰，可以用风格星星（代币）解锁。"],["Choose a city map","选择城市地图"],["Cozy challenge","温馨挑战"],["Gentle stroll","轻松散步"],["Wiggly city adventure","摇摇晃晃的城市冒险"],["Big brave challenge","勇敢的大挑战"],["How many friends?","有多少位朋友？"],["Starting fish cards","初始鱼卡"],["Start our sparkly adventure","开始闪闪发光的冒险"],["Visit wardrobe","访问衣橱"],["The cuddle wardrobe","抱抱衣橱"],["Want more pretty looks? Spend your style stars (tokens) to unlock coats, capes, scarves, glasses, bells, and tiny backpacks.","想要更多漂亮造型吗？用风格星星（代币）解锁外套、斗篷、围巾、眼镜、铃铛和小背包吧。"],["How to play, little paw-friend","玩法说明，小爪爪朋友"],["Take turns choosing kind actions for your crew.","轮流为小队选择友善的行动。"],["Collect three fish cards for every kitty.","为每只猫猫收集三张鱼卡。"],["Keep every cat's worry below 3.","让每只猫猫的担忧保持在3以下。"],["Share helpful supplies and cozy breaks.","分享有用的物资，享受温暖的休息。"],["Finish together to earn style stars.","一起完成冒险，赢得风格星星。"],["Okay, let's make our kitties!","好啦，一起制作猫猫吧！"],["Your lovely crew","你可爱的猫猫小队"],["Shared rescue nook","共享救援小窝"],["Our sweet team goal","我们甜甜的团队目标"],["Gather fish cards, lower worry, and help every kitty feel safe.","收集鱼卡、减少担忧，让每只猫猫都感到安全。"],["Little neighborhood notes","街区小笔记"],["Leave this adventure","离开这次冒险"],["Back to the cozy menu","回到温馨菜单"],["Cozy rose coat","玫瑰暖外套"],["Sparkly bow tie","闪亮蝴蝶结"],["Sunny raincoat","阳光雨衣"],["Berry-soft scarf","莓果软围巾"],["Tiny hero cape","迷你英雄斗篷"],["Cloud-puff hoodie","云朵蓬蓬卫衣"],["Rescue helper vest","救援助手背心"],["Cherry blossom wrap","樱花披肩"],["Olive garden outfit","橄榄花园装"],["warm, cuddly, and ready for gentle naps","温暖、软乎乎，适合甜甜午睡"],["bright, brave, and splash-ready","明亮、勇敢，准备好踩水花"],["snug, loved, and softly wrapped","舒适、被爱，柔软地包裹着"],["bold, bouncy, and ready to help","大胆、活泼，随时准备帮忙"],["calm, floaty, and extra cozy","平静、轻飘飘，格外舒适"],["proud, useful, and full of courage","自豪、可靠，充满勇气"],["peaceful, graceful, and spring-soft","平和、优雅，像春天一样柔软"],["sunny, peaceful, and garden-happy","阳光、平静，像花园一样快乐"],["A neighbor leaves a yummy snack","邻居留下了美味点心"],["A warm dinner to share","一顿可以分享的暖暖晚餐"],["A snug, dry little corner","一个干燥舒适的小角落"],["A wobbly moment in the city","城市里摇摇晃晃的一刻"],["A rescue nook has goodies","救援小窝里有好东西"],["A hopeful hello","充满希望的问候"],["Gain two fish cards.","获得两张鱼卡。"],["You and another kitty each gain one fish card.","你和另一只猫猫各获得一张鱼卡。"],["Take a cozy rest and lower worry.","舒适地休息一下，减少担忧。"],["Take one worry or spend a fish card.","增加一点担忧，或花一张鱼卡。"],["Add food and medical help to the shared nook.","为共享小窝增加食物和医疗用品。"],["Give one fish card to earn a home card.","送出一张鱼卡，赢得一张家的卡片。"],["A gentle city moment","温柔的城市时刻"],["what would feel kindest?","怎样做最温柔呢？"],["Accept the yummy snack (+2 fish)","接受美味点心（+2鱼卡）"],["Share with a buddy (+1 each)","和伙伴分享（各+1）"],["Take a cozy rest","舒适地休息一下"],["Be brave (+1 worry)","勇敢面对（+1担忧）"],["Use one fish card","使用一张鱼卡"],["Stock the shared rescue nook","补充共享救援小窝"],["Give one fish to a hopeful home","送一条鱼给希望之家"],["Adventure complete","冒险完成"],["Fish cards","鱼卡"],["worry","担忧"],["Food","食物"],["Medical","医疗"],["A warm little ending","温暖的小结局"],["A gentle goodbye","温柔的道别"],["Thank you for caring for your whole crew","谢谢你照顾整个猫猫小队"],["Every little look is unlocked. Your kitties are fashion stars!","每个造型都已解锁。你的猫猫都是时尚明星！"],["Pay","支付"],["style stars (tokens) to unlock","风格星星（代币）来解锁"],["friends","位朋友"],["starter gift","入门礼物"],["tokens","代币"],["Honey orange","蜜糖橙"],["Calico patches","三花斑纹"],["Moonlight gray","月光灰"],["Tuxedo cream","奶油燕尾"],["Vanilla cream","香草奶油"],["Midnight blue-black","午夜蓝黑"],["Snowy white","雪白"],["Cocoa brown","可可棕"],["Tiny moon bell","月亮小铃铛"],["Daisy ear flower","雏菊耳花"],["Paper star crown","纸星星王冠"],["Round sleepy glasses","圆圆睡眼眼镜"],["Little helper backpack","小助手背包"],["Olive leaf wreath","橄榄叶花环"],["Cherry blossom clip","樱花发夹"],["Rainbow bead collar","彩虹珠珠项圈"],["Orange Cat","橘猫"],["Calico Cat","三花猫"],["Gray Cat","灰猫"],["Tuxedo Cat","燕尾猫"],["Japan","日本"],["Greece","希腊"],["Italy","意大利"],["France","法国"],["China","中国"],["Turkey","土耳其"],["Spain","西班牙"],["Mexico","墨西哥"],["Brazil","巴西"],["South Africa","南非"],["South Korea","韩国"],["easy","简单"],["normal","普通"],["hard","困难"],["lanterns, cherry blossoms, tiled roofs","灯笼、樱花和瓦片屋顶"],["blue doors, olive trees, and a moonlit sea","蓝色门、橄榄树和月光海"],["a warm piazza, lemon trees, and a little fountain","温暖广场、柠檬树和小喷泉"],["cafe awnings, balconies, and twinkly rooftops","咖啡馆遮阳篷、阳台和闪亮屋顶"],["lantern-lit lanes, layered roofs, and garden paths","灯笼小巷、层叠屋顶和花园小径"],["market lamps, domes, and a cozy hillside lane","集市灯、圆顶和温馨山坡小路"],["bright stucco homes, flowers, and a sunny plaza","明亮灰泥房、鲜花和阳光广场"],["colourful walls, clay pots, and desert flowers","彩色墙、陶罐和沙漠花朵"],["green hills, tropical leaves, and glowing homes","绿色山丘、热带叶子和发光房屋"],["mountain silhouettes, bright houses, and wildflowers","山脉剪影、明亮房屋和野花"],["traditional eaves, modern lights, and blossoms","传统屋檐、现代灯光和花朵"],      ["Your kitty","你的猫猫"],["found a yummy snack.","找到了美味点心。"],["shared dinner.","分享了晚餐。"],["Your little crew begins in","你的小队开始于"],["A warm little ending","温暖的小结局"],["A gentle goodbye","温柔的道别"]
+    ];
+    const simplifiedToTraditional = Object.fromEntries([...[
+      ["简","簡"],["体","體"],["语","語"],["言","言"],["国","國"],["猫","貓"],["回","回"],["归","歸"],["闪","閃"],["烁","爍"],["发","發"],["光","光"],["温","溫"],["暖","暖"],["街","街"],["队","隊"],["开","開"],["选","選"],["择","擇"],["颜","顏"],["为","為"],["伙","夥"],["伴","伴"],["帮","幫"],["寻","尋"],["找","找"],["安","安"],["全","全"],["时","時"],["间","間"],["乐","樂"],["欢","歡"],["术","術"],["星","星"],["数","數"],["币","幣"],["装","裝"],["饰","飾"],["锁","鎖"],["馨","馨"],["图","圖"],["说","說"],["明","明"],["轮","輪"],["换","換"],["鱼","魚"],["张","張"],["每","每"],["只","隻"],["担","擔"],["忧","憂"],["低","低"],["于","於"],["让","讓"],["感","感"],["到","到"],["舒","舒"],["适","適"],["休","休"],["息","息"],["获","獲"],["得","得"],["共","共"],["享","享"],["医","醫"],["疗","療"],["进","進"],["行","行"],["动","動"],["场","場"],["景","景"],["难","難"],["单","單"],["普","普"],["通","通"],["蓝","藍"],["门","門"],["树","樹"],["叶","葉"],["顶","頂"],["层","層"],["巷","巷"],["灯","燈"],["笼","籠"],["圆","圓"],["盘","盤"],["广","廣"],["阳","陽"],["艳","艷"],["墙","牆"],["壶","壺"],["绿","綠"],["热","熱"],["带","帶"],["屋","屋"],["脉","脈"],["传","傳"],["统","統"],["现","現"],["代","代"],["华","華"],["樱","櫻"],["药","藥"],["饼","餅"],["邻","鄰"],["饭","飯"],["窝","窩"],["东","東"],["西","西"],["南","南"],["北","北"],["见","見"],["梦","夢"],["实","實"],["谢","謝"],["顾","顧"],["丽","麗"],["银","銀"],["纸","紙"],["爱","愛"],["头","頭"],["听","聽"],["轻","輕"],["软","軟"],["勇","勇"],["气","氣"],["静","靜"],["风","風"],["云","雲"],["园","園"],["农","農"],["惊","驚"],["将","將"],["来","來"],["与","與"],["还","還"],["两","兩"],["个","個"],["这","這"],["么","麼"],["其","其"],["它","它"],["种","種"],["类","類"],["满","滿"],["尽","盡"],["已","已"],["项","項"],["卡","卡"],["创","創"],["伤","傷"],["贝","貝"],["汉","漢"],["书","書"],["画","畫"],["鸟","鳥"],["鸡","雞"],["岁","歲"],["专","專"],["业","業"],["级","級"],["员","員"],["声","聲"],["庆","慶"],["页","頁"],["觉","覺"],["联","聯"],["络","絡"],["网","網"],["标","標"],["签","籤"],["题","題"],["额","額"],["显","顯"],["示","示"],["断","斷"],["续","續"],["变","變"],["复","復"],["储","儲"],["读","讀"],["载","載"],["错","錯"],["误","誤"],["测","測"],["试","試"],["骤","驟"],["态","態"],["输","輸"],["入","入"],["出","出"],["奖","獎"],["励","勵"],["胜","勝"],["败","敗"],["终","終"],["结","結"],["始","始"],["合","合"],["顺","順"],["序","序"],["备","備"],["注","註"],["质","質"],["量","量"],["细","細"],["节","節"],["袍","袍"],["裤","褲"],["围","圍"],["镜","鏡"],["铃","鈴"],["铛","鐺"],["榄","欖"],["环","環"],["雏","雛"],["蝶","蝶"],["冠","冠"],["项","項"],["浅","淺"],["玩","玩"],["补","補"],["给","給"],["问","問"],["达","達"],["赚","賺"],["阶","階"],["资","資"],["属","屬"],["别","別"],["对","對"],["应","應"],["当","當"],["须","須"],["请","請"],["迎","迎"],["转","轉"],["繁","繁"],["险","險"],["冒","冒"],["组","組"],["橱","櫥"],["制","製"],["作","作"],["礼","禮"],["物","物"],["腊","臘"],["韩","韓"],["轻","輕"],["松","鬆"],["摇","搖"],["战","戰"],["访","訪"],["夹","夾"],["纹","紋"],["静","靜"],["发","髮"],["挑","挑"],["药","藥"],["华","華"],["国","國"],["级","級"],["显","顯"],["示","示"],["仅","僅"],["称","稱"],["称","稱"],["圆","圓"],["满","滿"],["这","這"],["门","門"],["头","頭"],["个","個"],["将","將"],["为","為"],["于","於"],["还","還"],["与","與"],["专","專"],["业","業"],["须","須"],["须","須"],["卫","衛"],["裤","褲"],["誉","譽"],["习","習"],["惯","慣"],["别","別"],["达","達"],["问","問"],["欢","歡"],["邻","鄰"],["饱","飽"],["饭","飯"],["饭","飯"],["补","補"],["充","充"],["别","別"],["对","對"],["应","應"],["当","當"],["请","請"],["为","為"],["认","認"],["让","讓"],["觉","覺"],["种","種"],["细","細"],["节","節"],["开","開"],["关","關"],["闭","閉"],["声","聲"],["乐","樂"],["响","響"],["独","獨"],["页","頁"],["网","網"],["络","絡"],["视","視"],["频","頻"],["图","圖"],["标","標"],["签","籤"],["题","題"],["续","續"],["变","變"],["换","換"],["复","復"],["原","原"],["储","儲"],["存","存"],["读","讀"],["取","取"],["载","載"],["错","錯"],["误","誤"],["测","測"],["试","試"],["骤","驟"],["动","動"],["态","態"],["输","輸"],["入","入"],["奖","獎"],["励","勵"],["胜","勝"],["败","敗"],["终","終"],["结","結"],["始","始"],["顺","順"],["备","備"],["注","註"],["质","質"],["细","細"],["饰","飾"],["袍","袍"],["衫","衫"],["帽","帽"],["围","圍"],["巾","巾"],["镜","鏡"],["铃","鈴"],["铛","鐺"],["榄","欖"],["环","環"],["雏","雛"],["项","項"],["圈","圈"],["浅","淺"],["深","深"],["尽","盡"],["已","已"],["让","讓"],["获","獲"],["得","得"],["过","過"],["远","遠"],["还","還"],["边","邊"],["处","處"],["带","帶"],["里","裡"],["别","別"],["为","為"],["每","每"],["只","隻"],["鱼","魚"],["张","張"],["条","條"],["张","張"],["数","數"],["据","據"],["统","統"],["计","計"],["应","應"],["该","該"],["并","並"],["且","且"],["或","或"],["仍","仍"],["然","然"],["须","須"],["已","已"],["经","經"],["过","過"],["历","歷"],["记","記"],["录","錄"],["获","獲"],["奖","獎"],["励","勵"],["资","資"],["源","源"],["类","類"],["型","型"],["数","數"],["量","量"],["配","配"],["戴","戴"],["风","風"],["格","格"],["宠","寵"],["物","物"],["项","項"],["目","目"],["备","備"],["选","選"],["默","默"],["认","認"],["状","狀"],["态","態"],["启","啟"],["动","動"],["暂","暫"],["停","停"],["恢","恢"],["复","復"],["音","音"],["开","開"],["始","始"],["渐","漸"],["变","變"],["减","減"],["弱","弱"],["强","強"],["调","調"],["整","整"],["断","斷"],["续","續"],["间","間"],["隔","隔"],["每","每"],["秒","秒"],["触","觸"],["碰","碰"],["轻","輕"],["微","微"],["响","響"],["柔","柔"],["软","軟"],["动","動"],["耳","耳"],["尾","尾"],["稍","稍"],["移","移"],["变","變"],["化","化"],["国","國"],["场","場"],["景","景"],["背","背"],["地","地"],["滚","滾"],["动","動"],["屏","屏"],["幕","幕"],["适","適"],["配","配"],["响","響"],["触","觸"],["标","標"],["签","籤"],["传","傳"],["数","數"],["据","據"],["本","本"],["版","版"],["线","線"],["宽","寬"],["高","高"],["页","頁"],["栏","欄"],["网","網"],["站","站"],["开","開"],["源","源"],["浏","瀏"],["览","覽"],["器","器"],["电","電"],["脑","腦"],["手","手"],["机","機"],["公","公"],["开","開"],["发","發"],["布","佈"],["连","連"],["接","接"],["访","訪"],["问","問"],["网","網"],["址","址"],["预","預"],["览","覽"],["页","頁"],["移","移"],["动","動"],["设","設"],["置","置"],["功","功"],["能","能"],["问","問"],["题","題"],["修","修"],["复","復"],["更","更"],["新","新"],["完","完"],["整","整"],["保","保"],["持","持"],["切","切"],["换","換"],["语","語"],["简","簡"],["繁","繁"]
+    ].map(([from, to]) => [from, to])]);
+    function toTraditional(text) {
+      return [...text].map(char => simplifiedToTraditional[char] || char).join("");
+    }
+    function normalizeTraditional(text) {
+      return text
+        .replace(/Cozy rose coat and sparkly bow tie are starter gifts\./g, "玫瑰暖外套和閃亮蝴蝶結是入門禮物。")
+        .replace(/Want more pretty looks\? Spend your style stars \(tokens\) to unlock coats, capes, scarves, glasses, bells, and tiny backpacks\./g, "想要更多漂亮造型嗎？用風格星星（代幣）解鎖外套、斗篷、圍巾、眼鏡、鈴鐺和小背包吧。")
+        .replace(/A tiny finishing touch that makes your kitty feel extra special\./g, "讓貓貓變得更加特別的小點綴。")
+        .replace(/玫瑰暖外套 and sparkly bow tie are 入門禮物s\./g, "玫瑰暖外套和閃亮蝴蝶結是入門禮物。")
+        .replace(/Pay (\d+) style stars \(tokens\) to unlock/g, "支付 $1 顆風格星星（代幣）來解鎖")
+        .replace(/Unlock · (\d+) stars/g, "解鎖 · $1 顆星星")
+        .replace(/礼物/g, "禮物").replace(/制作/g, "製作").replace(/吗/g, "嗎").replace(/准备/g, "準備").replace(/准/g, "準").replace(/随/g, "隨")
+        .replace(/轻松/g, "輕鬆").replace(/摇摇晃晃/g, "搖搖晃晃").replace(/挑战/g, "挑戰")
+        .replace(/访问/g, "訪問").replace(/纹/g, "紋").replace(/夹/g, "夾").replace(/飘/g, "飄")
+        .replace(/大胆/g, "大膽").replace(/活泼/g, "活潑").replace(/着/g, "著").replace(/希腊/g, "希臘")
+        .replace(/韩/g, "韓").replace(/门/g, "門").replace(/国/g, "國").replace(/发/g, "發")
+        .replace(/我们/g, "我們").replace(/团队/g, "團隊").replace(/目标/g, "目標").replace(/街区/g, "街區")
+        .replace(/离开/g, "離開").replace(/这次冒险/g, "這次冒險").replace(/甜甜的/g, "甜甜的")
+        .replace(/鱼卡/g, "魚卡").replace(/食物/g, "食物").replace(/医疗/g, "醫療")
+        .replace(/团/g, "團").replace(/笔/g, "筆").replace(/干/g, "乾").replace(/点/g, "點");
+    }
+    const gameZh = {
+      "A gentle city moment":"溫柔的城市時刻","what would feel kindest?":"怎樣做最溫柔呢？",
+      "Accept the yummy snack (+2 fish)":"接受美味點心（+2魚卡）","Share with a buddy (+1 each)":"和夥伴分享（各+1）",
+      "Take a cozy rest":"舒適地休息一下","Be brave (+1 worry)":"勇敢面對（+1擔憂）",
+      "Use one fish card":"使用一張魚卡","Stock the shared rescue nook":"補充共享救援小窩",
+      "Give one fish to a hopeful home":"送一條魚給希望之家","Adventure complete":"冒險完成",
+      "Your sweet crew made it together!":"你的可愛小隊一起完成了冒險！",
+      "It was a wobbly night, but your kitties tried their best.":"這是一個搖搖晃晃的夜晚，但你的貓貓已經盡力了。",
+      "Back to the cozy menu":"回到溫馨菜單","Thank you for caring for your whole crew":"謝謝你照顧整個貓貓小隊",
+      "Your little crew begins in":"你的小隊開始於","found a yummy snack.":"找到了美味點心。",
+      "shared dinner.":"分享了晚餐。","A warm little ending":"溫暖的小結局","A gentle goodbye":"溫柔的道別"
+    };
+    function gameText(text) {
+      if (language === "en") return text;
+      const kittyMatch = text.match(/^(.+)'s kitty$/);
+      if (kittyMatch) return `${kittyMatch[1] === "Kitty 1" ? "貓貓1" : kittyMatch[1] === "Kitty 2" ? "貓貓2" : kittyMatch[1]}的貓貓`;
+      const statusMatch = text.match(/^(.+), what would feel kindest\?$/);
+      if (statusMatch) {
+        const statusName = /^Kitty (\d+)$/.test(statusMatch[1]) ? `貓貓${statusMatch[1].match(/\d+/)[0]}` : statusMatch[1];
+        return `${statusName}，怎樣做最溫柔呢？`;
+      }
+      const turnMatch = text.match(/^🐾 (.+)'s turn$/);
+      if (turnMatch) return `🐾 ${turnMatch[1] === "Kitty 1" ? "貓貓1" : turnMatch[1]}的回合`;
+      const logMatch = text.match(/^(Kitty \d+) (found a yummy snack\.|shared dinner\.)$/);
+      if (logMatch) {
+        const logName = logMatch[1].replace(/^Kitty (\d+)$/, "貓貓$1");
+        return `${logName} ${logMatch[2] === "found a yummy snack." ? "找到了美味點心。" : "分享了晚餐。"}`;
+      }
+      const resultMatch = text.match(/^(🌟|🌧️) (.+)$/);
+      if (resultMatch && gameZh[resultMatch[2]]) return `${resultMatch[1]} ${gameZh[resultMatch[2]]}`;
+      const statsMatch = text.match(/^🎨 (.+) · 🐟 (\d+) fish · 💧 (\d+)\/3 worry$/);
+      if (statsMatch) {
+        const colors = { orange:"蜜糖橙", calico:"三花斑紋", gray:"月光灰", tuxedo:"奶油燕尾", cream:"香草奶油", black:"午夜藍黑", white:"雪白", brown:"可可棕" };
+        return `🎨 ${colors[statsMatch[1]] || statsMatch[1]} · 🐟 ${statsMatch[2]} 魚 · 💧 ${statsMatch[3]}/3 擔憂`;
+      }
+      const translated = gameZh[text] || translateText(text);
+      return language === "zh-Hant" ? normalizeTraditional(toTraditional(translated)) : translated;
+    }
+    const tcPairs = zhPairs.map(([english, chinese]) => [english, toTraditional(chinese)]);
+    function translateText(text) {
+      let output = text;
+      const pairs = language === "zh" ? zhPairs : language === "zh-Hant" ? tcPairs : [...zhPairs].reverse().map(([english, chinese]) => [chinese, english]);
+      pairs.forEach(([from, to]) => { output = output.split(from).join(to); });
+      if (language === "zh") output = output.replace(/^Round (\d+) of 4$/, "第$1回合，共4回合").replace(/^🐟 Fish cards: (\d+)\/(\d+)$/, "🐟 鱼卡：$1/$2").replace(/^🐾 (.+)'s turn$/, "🐾 $1的回合").replace(/^🎨 (.+)$/, "🎨 $1").replace(/^💧 (\d+)\/3 worry$/, "💧 担忧 $1/3").replace(/^🍲 Food: (\d+) · 🩹 Medical: (\d+)$/, "🍲 食物：$1 · 🩹 医疗：$2").replace(/^Player (\d+)'s sweet name$/, "玩家$1的可爱名字").replace(/^Fur colour$/, "毛色").replace(/^Outfit$/, "服装").replace(/^Accessory$/, "配饰").replace(/^Kitty (\d+)$/, "猫猫$1").replace(/^Your sparkly pixel kitty$/, "你的闪闪像素猫猫").replace(/^96 × 96 pixels · blink, wiggle, and twinkle ✨$/, "96 × 96像素 · 会眨眼、摇摆和闪闪发光 ✨").replace(/^Detailed 96×96 pixel preview ✨$/, "精美像素预览 ✨").replace(/^Unlock · (\d+) stars$/, "解锁 · $1颗星星").replace(/^A tiny finishing touch that makes your kitty feel extra special\\.$/, "让猫猫变得更加特别的小点缀。").replace(/ · (简单|普通|困难) city$/, " · $1级城市").replace(/ · (easy|normal|hard) city$/, " · $1级城市").replace(/ is full of /, "充满");
+      else if (language === "zh-Hant") output = normalizeTraditional(toTraditional(output.replace(/^Round (\d+) of 4$/, "第$1回合，共4回合").replace(/^🐟 Fish cards: (\d+)\/(\d+)$/, "🐟 魚卡：$1/$2").replace(/^🐾 (.+)'s turn$/, "🐾 $1的回合").replace(/^💧 (\d+)\/3 worry$/, "💧 擔憂 $1/3").replace(/^🍲 Food: (\d+) · 🩹 Medical: (\d+)$/, "🍲 食物：$1 · 🩹 醫療：$2").replace(/^Player (\d+)'s sweet name$/, "玩家$1的可愛名字").replace(/^Fur colour$/, "毛色").replace(/^Outfit$/, "服裝").replace(/^Accessory$/, "配飾").replace(/^Kitty (\d+)$/, "貓貓$1").replace(/^Your sparkly pixel kitty$/, "你的閃閃像素貓貓").replace(/^Unlock · (\d+) stars$/, "解鎖 · $1顆星星").replace(/^A tiny finishing touch that makes your kitty feel extra special\\.$/, "讓貓貓變得更加特別的小點綴。").replace(/ · (簡單|普通|困難) city$/, " · $1級城市").replace(/ · (easy|normal|hard) city$/, " · $1級城市").replace(/ is full of /, "充滿")));
+      else output = output.replace(/^第(\d+)回合，共4回合$/, "Round $1 of 4").replace(/^🐟 魚卡：(\d+)\/(\d+)$/, "🐟 Fish cards: $1/$2").replace(/^🐾 (.+)的回合$/, "🐾 $1's turn").replace(/^🎨 (.+)$/, "🎨 $1").replace(/^💧 擔憂 (\d+)\/3$/, "💧 $1/3 worry").replace(/^🍲 食物：(\d+) · 🩹 醫療：(\d+)$/, "🍲 Food: $1 · 🩹 Medical: $2").replace(/^玩家(\d+)的可愛名字$/, "Player $1's sweet name").replace(/^毛色$/, "Fur colour").replace(/^服裝$/, "Outfit").replace(/^配飾$/, "Accessory").replace(/^貓貓(\d+)$/, "Kitty $1").replace(/^你的閃閃像素貓貓$/, "Your sparkly pixel kitty").replace(/^解鎖 · (\d+)顆星星$/, "Unlock · $1 stars").replace(/^讓貓貓變得更加特別的小點綴。$/, "A tiny finishing touch that makes your kitty feel extra special.");
+      return output;
+    }
+    function applyLanguage() {
+      document.documentElement.lang = language === "zh" ? "zh-CN" : language === "zh-Hant" ? "zh-TW" : "en";
+      document.title = language === "zh" ? "城市流浪猫：猫猫的回归" : language === "zh-Hant" ? "城市流浪貓：貓貓的回歸" : "City Stray Cats: The Cat's Comeback";
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      const textNodes = [];
+      while (walker.nextNode()) {
+        const node = walker.currentNode;
+        if (node.parentElement && !["SCRIPT", "STYLE"].includes(node.parentElement.tagName) && node.nodeValue.trim()) textNodes.push(node);
+      }
+      textNodes.forEach(node => { node.nodeValue = translateText(node.nodeValue); });
+      document.querySelectorAll("input[placeholder]").forEach(input => { input.placeholder = translateText(input.placeholder); });
+      document.querySelectorAll("[aria-label]").forEach(node => { node.setAttribute("aria-label", translateText(node.getAttribute("aria-label"))); });
+      $("#langEn")?.classList.toggle("selected", language === "en"); $("#langZh")?.classList.toggle("selected", language === "zh"); $("#langZhHant")?.classList.toggle("selected", language === "zh-Hant");
+    }
+
+    function show(id) { screens.forEach(screen => $("#" + screen).classList.toggle("hidden", screen !== id)); scrollTo({ top:0, behavior:"smooth" }); }
+    function esc(value) { return String(value).replace(/[&<>"']/g, char => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[char])); }
+    function pick(list, id) { return list.find(item => item[0] === id) || list[0]; }
+    function save() { localStorage.setItem("cityCatsSave", JSON.stringify(saveData)); document.querySelectorAll(".wallet").forEach(node => node.textContent = saveData.tokens); }
+    function selectedMap() { return maps.find(map => map.name === $("#mapSelect").value) || maps[0]; }
+
+    let musicContext = null, musicMaster = null, musicTimer = null, musicStep = 0, musicPlaying = false;
+    const tempo = 82, stepDuration = 60 / tempo / 2;
+    const melody = [392, null, 440, 523.25, null, 440, 392, null, 329.63, null, 392, 440, null, 392, 329.63, null, 392, null, 440, 587.33, null, 523.25, 440, null, 392, null, 329.63, 392, null, 293.66, 329.63, null];
+    const alternateMelody = [523.25, null, 587.33, 659.25, null, 587.33, 523.25, null, 440, null, 523.25, 587.33, null, 523.25, 440, null, 392, null, 440, 523.25, null, 587.33, 523.25, null, 440, null, 392, 440, null, 329.63, 392, null];
+    const chords = [[261.63, 329.63, 392], [196, 246.94, 293.66], [220, 277.18, 329.63], [174.61, 220, 261.63]];
+    const bass = [130.81, 98, 110, 87.31];
+    function playMusicTone(frequency, duration, type, volume, when, attack = .05) {
+      if (!musicContext || !musicMaster || !frequency) return;
+      const oscillator = musicContext.createOscillator(), gain = musicContext.createGain();
+      oscillator.type = type; oscillator.frequency.setValueAtTime(frequency, when);
+      gain.gain.setValueAtTime(0.0001, when);
+      gain.gain.exponentialRampToValueAtTime(volume, when + attack);
+      gain.gain.exponentialRampToValueAtTime(0.0001, when + duration);
+      oscillator.connect(gain).connect(musicMaster);
+      oscillator.start(when); oscillator.stop(when + duration + .08);
+    }
+    function playRainTick(when) {
+      const buffer = musicContext.createBuffer(1, musicContext.sampleRate * .045, musicContext.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let index = 0; index < data.length; index++) data[index] = (Math.random() * 2 - 1) * (1 - index / data.length);
+      const source = musicContext.createBufferSource(), filter = musicContext.createBiquadFilter(), gain = musicContext.createGain();
+      source.buffer = buffer; filter.type = "highpass"; filter.frequency.value = 2500; gain.gain.value = .012;
+      source.connect(filter).connect(gain).connect(musicMaster); source.start(when);
+    }
+    function playMeow() {
+      if (!musicContext) {
+        const AudioCtor = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtor) return;
+        musicContext = new AudioCtor();
+        musicMaster = musicContext.createGain(); musicMaster.gain.value = 0.7; musicMaster.connect(musicContext.destination);
+      }
+      if (musicContext.state === "suspended") musicContext.resume();
+      const now = musicContext.currentTime, gain = musicContext.createGain(), oscillator = musicContext.createOscillator();
+      oscillator.type = "sine";
+      oscillator.frequency.setValueAtTime(520, now);
+      oscillator.frequency.exponentialRampToValueAtTime(760, now + .09);
+      oscillator.frequency.exponentialRampToValueAtTime(430, now + .28);
+      gain.gain.setValueAtTime(.0001, now);
+      gain.gain.exponentialRampToValueAtTime(.055, now + .025);
+      gain.gain.exponentialRampToValueAtTime(.0001, now + .32);
+      oscillator.connect(gain).connect(musicMaster);
+      oscillator.start(now); oscillator.stop(now + .36);
+    }
+    function scheduleMusicStep() {
+      if (!musicContext || !musicPlaying) return;
+      const now = musicContext.currentTime + .04, section = Math.floor(musicStep / 32) % 2, position = musicStep % 32, chord = chords[Math.floor(musicStep / 8) % chords.length];
+      if (position % 8 === 0) chord.forEach(note => playMusicTone(note, stepDuration * 8.5, "sine", .018, now, .35));
+      if (position % 4 === 0) playMusicTone(bass[Math.floor(musicStep / 8) % bass.length], stepDuration * 3.8, "triangle", .045, now, .08);
+      const note = (section ? alternateMelody : melody)[position];
+      if (note) playMusicTone(note, stepDuration * 1.65, "sine", .045, now, .025);
+      if (position % 2 === 0) playMusicTone(chord[(position / 2) % chord.length] * 2, stepDuration * .8, "triangle", .018, now, .02);
+      if (position % 4 === 2) playRainTick(now);
+      musicStep++;
+    }
+    async function toggleMusic() {
+      if (!musicContext) {
+        musicContext = new (window.AudioContext || window.webkitAudioContext)();
+        musicMaster = musicContext.createGain(); musicMaster.gain.value = 0.7; musicMaster.connect(musicContext.destination);
+      }
+      if (musicContext.state === "suspended") await musicContext.resume();
+      musicPlaying = !musicPlaying;
+      const toggle = $("#musicToggle");
+      toggle.setAttribute("aria-pressed", String(musicPlaying));
+      toggle.textContent = translateText(musicPlaying ? "🔊 Pause cozy night music" : "🎵 Play cozy night music");
+      if (musicPlaying) {
+        musicStep = 0; scheduleMusicStep();
+        musicTimer = setInterval(scheduleMusicStep, stepDuration * 1000);
+      } else {
+        clearInterval(musicTimer); musicTimer = null;
+        musicMaster.gain.setTargetAtTime(0.0001, musicContext.currentTime, 0.04);
+        setTimeout(() => { if (!musicPlaying && musicMaster) musicMaster.gain.value = 0.7; }, 180);
+      }
+    }
+
+    function renderScene(element, map) {
+      element.dataset.map = map.name;
+      const heights = [55, 82, 65, 98, 72, 88, 59, 76];
+      const sceneLabel = translateText(`${map.name} · ${map.tier} city`);
+      element.innerHTML = `
+        <span class="scene-stars">· ✦ ·  ✧ ·</span><span class="scene-sun"></span><span class="scene-cloud">☁️</span>
+        <span class="scene-label">${map.flag} ${esc(sceneLabel)}</span>
+        <div class="scene-hills"></div>
+        <div class="scene-buildings">${heights.map((height, index) => `<span class="building ${index % 3 === 1 ? "roof" : ""}" style="--h:${height}px;--w:${8 + index % 4 * 2}%"></span>`).join("")}</div>
+        <div class="scene-landmarks">${map.landmarks.map(item => `<span class="landmark">${item}</span>`).join("")}</div>
+        <div class="scene-pixel-grid"></div><span class="scene-lamp"></span><div class="scene-road"></div><div class="scene-weather" aria-hidden="true"></div>`;
+    }
+    function updateScenes() {
+      const map = selectedMap();
+      renderScene($("#setupScene"), map); renderScene($("#gameScene"), map);
+      $("#mapDescription").textContent = translateText(`${map.flag} ${map.name} is full of ${map.detail}.`);
+      applyLanguage();
+    }
+
+    function drawPixelCat(canvas) {
+      const ctx = canvas.getContext("2d");
+      const frame = Math.floor(performance.now() / 120);
+      const blink = frame % 36 >= 33;
+      const color = canvas.dataset.fur || "orange";
+      const petted = Number(canvas.dataset.pettedUntil || 0) > performance.now();
+      const earLift = petted ? -1 : 0;
+      const tailLift = petted ? -2 : 0;
+      const outfit = canvas.dataset.outfit || "coat";
+      const accessory = canvas.dataset.accessory || "bowtie";
+      const palette = {
+        orange:["#e9a35e","#ad6949","#f7bd78","#c87845"], calico:["#f4dfc3","#6d4651","#d9775d","#a85d4d"],
+        gray:["#b9b9d1","#74758e","#d7d6e5","#85859d"], tuxedo:["#eee8f5","#3d344e","#fff","#51475e"],
+        cream:["#f5dfb8","#ae795d","#fff1d2","#d49b6a"], black:["#342b43","#211b2e","#746581","#51415f"],
+        white:["#fffaf0","#bcaebc","#fff","#d8cbd8"], brown:["#9a624d","#633d3a","#c98c61","#7a483f"]
+      }[color] || ["#e9a35e","#ad6949","#f7bd78","#c87845"];
+      const clothes = { coat:"#ef8eb1", raincoat:"#70c8e7", scarf:"#e96d9a", cape:"#9878da", hoodie:"#8bb8d9", vest:"#f0a74f", japan:"#f28eae", greece:"#61b8dc" }[outfit] || "#ef8eb1";
+      ctx.clearRect(0, 0, 96, 96); ctx.imageSmoothingEnabled = false; ctx.save(); ctx.scale(3, 3);
+      const p = (x, y, fill, w = 1, h = 1) => { ctx.fillStyle = fill; ctx.fillRect(x, y, w, h); };
+      p(3,30,"#061021",26,1);       p(23,22 + tailLift,palette[1],2,2); p(24,20 + tailLift,palette[0],2,3); p(26,18 + tailLift,palette[0],2,3); p(28,16 + frame % 2 + tailLift,palette[0],2,3); p(29,14 + frame % 2 + tailLift,palette[1],2,3);
+      p(8,24,palette[1],5,5); p(19,24,palette[1],5,5); p(7,28,palette[0],6,2); p(18,28,palette[0],6,2);
+      p(7,17,palette[1],18,9); p(8,16,palette[0],16,10); p(10,19,palette[2],12,6); p(10,25,palette[2],3,3); p(18,25,palette[2],3,3);
+      p(6,7 + earLift,palette[1],6,9); p(8,4 + earLift,palette[0],5,7); p(19,4 + earLift,palette[0],5,7); p(21,7 + earLift,palette[1],6,9); p(7,8,palette[0],19,11); p(6,11,palette[0],20,6); p(9,7 + earLift,"#ee9daf",2,3); p(20,7 + earLift,"#ee9daf",2,3);
+      if (color === "calico") { p(8,9,"#fff5e8",5,4); p(21,8,"#593b4b",4,5); p(19,14,"#d9775d",3,2); } else if (color === "tuxedo") p(11,9,"#fff",11,8); else { p(8,8,palette[2],4,4); p(21,13,palette[2],4,3); p(12,8,palette[3],2,4); p(16,7,palette[3],2,5); }
+      if (outfit === "scarf") { p(8,17,clothes,16,3); p(19,19,clothes,4,6); p(8,17,"#ffe6b5",16,1); } else if (outfit === "cape") { p(7,17,clothes,4,9); p(21,17,clothes,4,9); p(10,17,"#d9c5ff",12,2); p(12,22,"#f5d992",8,1); } else if (outfit === "hoodie") { p(8,17,clothes,16,9); p(12,18,"#d7efff",8,2); } else if (outfit === "vest") { p(9,18,clothes,14,8); p(11,19,"#fff1c4",3,5); p(18,19,"#fff1c4",3,5); } else { p(9,19,clothes,14,6); p(11,25,clothes,4,2); p(17,25,clothes,4,2); p(10,19,"#fff0cc",12,1); }
+      const eye = blink ? palette[0] : "#30243d"; p(11,12,eye,2,blink ? 1 : 3); p(20,12,eye,2,blink ? 1 : 3); if (!blink) { p(11,12,"#fff9ec"); p(20,12,"#fff9ec"); } p(15,16,"#db7999",2,1); p(14,17,"#4b3546"); p(17,17,"#4b3546");
+      if (accessory === "bowtie") { p(12,18,"#ff6d9d",2,2); p(16,18,"#ff6d9d",2,2); p(14,18,"#ffe29a",2,2); }
+      if (accessory === "bell") { p(14,19,"#ffd75e",3,3); p(15,22,"#fff1a7"); }
+      if (accessory === "flower") { p(23,7,"#ff9dc9",2,2); p(22,8,"#ff9dc9"); p(25,8,"#ff9dc9"); p(23,9,"#ffe29a"); }
+      if (accessory === "crown") { p(10,4,"#ffe06c",12,2); p(11,2,"#ffe06c"); p(15,1,"#ffe06c"); p(20,2,"#ffe06c"); }
+      if (accessory === "glasses") { p(9,11,"#8ed7e8",5,4); p(19,11,"#8ed7e8",5,4); p(14,12,"#75618d",5,1); }
+      if (accessory === "backpack") { p(5,19,"#6b8ee4",3,7); p(24,19,"#6b8ee4",3,7); p(6,20,"#a4c5ff",1,2); }
+      if (accessory === "olive") { p(9,5,"#a9da83",2,1); p(12,3,"#a9da83",2,1); p(18,3,"#a9da83",2,1); p(21,5,"#a9da83",2,1); }
+      if (accessory === "cherry") { p(22,6,"#ff99c6",2,2); p(21,7,"#ff99c6"); p(22,7,"#ffe29a"); }
+      if (accessory === "beads") { p(10,19,"#71d7e2",2,1); p(14,19,"#ffcf65",2,1); p(19,19,"#f28cb5",2,1); }
+      ctx.restore();
+    }
+    function makeCanvas(fur, outfit, accessory, className = "") { const canvas = document.createElement("canvas"); canvas.width = canvas.height = 96; canvas.className = `pixel ${className}`.trim(); canvas.dataset.fur = fur; canvas.dataset.outfit = outfit; canvas.dataset.accessory = accessory; drawPixelCat(canvas); return canvas; }
+    function petTitleCat(slot) {
+      const canvas = slot.querySelector("canvas");
+      if (!canvas) return;
+      canvas.dataset.pettedUntil = String(performance.now() + 520);
+      slot.classList.remove("petted"); void slot.offsetWidth; slot.classList.add("petted");
+      playMeow();
+      setTimeout(() => { slot.classList.remove("petted"); }, 520);
+    }
+    function renderCounts() { const target = $("#count"); target.innerHTML = ""; target.dataset.value ||= "2"; for (let count = 2; count <= 4; count++) { const button = document.createElement("button"); button.className = `colour-choice ${String(count) === target.dataset.value ? "selected" : ""}`; button.textContent = `🐈 ${count} friends`; button.onclick = () => { target.dataset.value = String(count); renderCounts(); renderSetups(); }; target.append(button); } applyLanguage(); }
+    function renderSetups() {
+      const old = [...$("#setups").children].map(card => ({ name: card.querySelector(".name")?.value || "", fur: card.querySelector(".colour-choice.selected")?.dataset.fur || "orange", outfit: card.querySelector(".outfit")?.value || "coat", accessory: card.querySelector(".accessory")?.value || "bowtie" }));
+      const unlockedOutfits = outfits.filter(item => item[2] === 0 || saveData.outfits.includes(item[0]));
+      const unlockedAccessories = accessories.filter(item => item[2] === 0 || saveData.accessories.includes(item[0]));
+      $("#setups").innerHTML = "";
+      for (let index = 0; index < Number($("#count").dataset.value || 2); index++) {
+        const previous = old[index] || {}, fur = previous.fur || furColours[index % furColours.length][0], outfit = pick(unlockedOutfits, previous.outfit), accessory = pick(unlockedAccessories, previous.accessory);
+        const card = document.createElement("div"); card.className = "setup-player";
+        card.innerHTML = `<label>${translateText(`Player ${index + 1}'s sweet name`)}<input class="name" maxlength="18" placeholder="${translateText(`Kitty ${index + 1}`)}" value="${esc(previous.name || "")}"></label><label style="margin-top:8px">${translateText("Fur colour")}<div class="colour-picker">${furColours.map(item => `<button type="button" class="colour-choice ${item[0] === fur ? "selected" : ""}" data-fur="${item[0]}"><span class="swatch" style="background:${item[2]}"></span>${translateText(item[1])}</button>`).join("")}</div></label><div class="grid"><label>${translateText("Outfit")}<select class="outfit">${unlockedOutfits.map(item => `<option value="${item[0]}" ${item[0] === outfit[0] ? "selected" : ""}>${item[4]} ${translateText(item[1])}${item[2] === 0 ? translateText(" · 🎁 starter gift") : ` · ${item[2]} ${translateText("tokens")}`}</option>`).join("")}</select></label><label>${translateText("Accessory")}<select class="accessory">${unlockedAccessories.map(item => `<option value="${item[0]}" ${item[0] === accessory[0] ? "selected" : ""}>${item[4]} ${translateText(item[1])}${item[2] === 0 ? translateText(" · 🎁 starter gift") : ` · ${item[2]} ${translateText("tokens")}`}</option>`).join("")}</select></label></div><div class="pixel-showcase"><div class="preview"></div><div class="pixel-copy"><div class="pixel-name">${translateText("Your sparkly pixel kitty")}</div><div class="caption fur-label"></div><div class="caption outfit-label"></div><div class="caption accessory-label"></div></div></div>`;
+        $("#setups").append(card);
+        const update = () => { const selectedFur = card.querySelector(".colour-choice.selected").dataset.fur, selectedOutfit = pick(outfits, card.querySelector(".outfit").value), selectedAccessory = pick(accessories, card.querySelector(".accessory").value); card.querySelector(".preview").replaceChildren(makeCanvas(selectedFur, selectedOutfit[3], selectedAccessory[3])); card.querySelector(".fur-label").textContent = translateText(`🎨 ${furColours.find(item => item[0] === selectedFur)[1]}`); card.querySelector(".outfit-label").textContent = translateText(`🧥 ${selectedOutfit[4]} ${selectedOutfit[1]}`); card.querySelector(".accessory-label").textContent = translateText(`🎀 ${selectedAccessory[4]} ${selectedAccessory[1]}`); applyLanguage(); };
+        card.querySelectorAll(".colour-choice").forEach(button => button.onclick = () => { card.querySelectorAll(".colour-choice").forEach(choice => choice.classList.remove("selected")); button.classList.add("selected"); update(); });
+        card.querySelector(".outfit").onchange = update; card.querySelector(".accessory").onchange = update; update();
+      }
+      applyLanguage();
+    }
+    function renderShop() {
+      const list = $("#shop"); list.innerHTML = "";
+      [...outfits, ...accessories].filter(item => item[2] > 0 && !saveData[outfits.includes(item) ? "outfits" : "accessories"].includes(item[0])).forEach(item => {
+        const collection = outfits.includes(item) ? "outfits" : "accessories", row = document.createElement("div"); row.className = "shop-item";
+        const itemName = translateText(item[1]), itemFeeling = collection === "outfits" ? translateText(item[5]) : translateText("A tiny finishing touch that makes your kitty feel extra special."), itemPrice = translateText(`Pay ${item[2]} style stars (tokens) to unlock`);
+        row.innerHTML = `<div class="pixel-showcase"><div class="shop-preview-holder"></div><div><strong>${item[4]} ${esc(itemName)}</strong><br><span class="caption">${esc(itemFeeling)}</span><br><span class="caption">${esc(itemPrice)}</span></div></div>`;
+        row.querySelector(".shop-preview-holder").append(makeCanvas("orange", collection === "outfits" ? item[3] : "coat", collection === "accessories" ? item[3] : "bowtie", "shop-preview"));
+        const buy = document.createElement("button"); buy.textContent = translateText(`Unlock · ${item[2]} stars`); buy.disabled = saveData.tokens < item[2]; buy.onclick = () => { saveData.tokens -= item[2]; saveData[collection].push(item[0]); save(); renderShop(); renderSetups(); }; row.append(buy); list.append(row);
+      });
+      if (!list.children.length) list.innerHTML = `<p class="note">${translateText("Every little look is unlocked. Your kitties are fashion stars! ✨")}</p>`;
+      applyLanguage();
+    }
+    function log(text) { notes.unshift(gameText(text)); $("#log").innerHTML = notes.slice(0, 10).map(item => `<li>${esc(item)}</li>`).join(""); }
+    function updateBoard() {
+      const total = players.reduce((sum, player) => sum + player.cards, 0), target = players.length * 3;
+      $("#round").textContent = gameText(`Round ${Math.min(4, Math.floor(turns / players.length) + 1)} of 4`); $("#team").textContent = gameText(`🐟 Fish cards: ${total}/${target}`); $("#turn").textContent = ended ? gameText("Adventure complete") : gameText(`🐾 ${players[turn].name}'s turn`); $("#progress").style.width = `${Math.min(100, total / target * 100)}%`; $("#station").textContent = gameText(`🍲 Food: ${station.food} · 🩹 Medical: ${station.medical}`);
+      $("#players").innerHTML = players.map((player, index) => `<div class="player ${index === turn && !ended ? "active" : ""}"><div class="player-head"><span>${esc(player.name)}</span><span>${esc(gameText(player.cat.name))}</span></div><div class="stats">${gameText(`🎨 ${player.cat.color} · 🐟 ${player.cards} fish · 💧 ${player.worry}/3 worry`)}</div><div class="pixel-showcase"><div class="game-preview"></div><div class="pixel-copy"><div class="pixel-name">${esc(gameText(`${player.name}'s kitty`))}</div><div class="caption">${esc(gameText(pick(outfits, player.outfit)[1]))}</div><div class="caption">${esc(gameText(pick(accessories, player.accessory)[1]))}</div></div></div></div>`).join("");
+      players.forEach((player, index) => $("#players").children[index].querySelector(".game-preview").append(makeCanvas(player.cat.color, player.outfit, player.accessory)));
+      applyLanguage();
+    }
+    function nextTurn() { if (ended) return; turns++; if (turns >= players.length * 4) return finish(); turn = turns % players.length; drawEvent(); }
+    function drawEvent() {
+      const event = events[Math.floor(Math.random() * events.length)], player = players[turn]; $("#event").innerHTML = `<div class="event-icon">${event[1]}</div><div class="event-type">${gameText("A gentle city moment")}</div><h2 class="event-title">${gameText(event[2])}</h2><div class="event-text">${gameText(event[3])}</div><div id="actions" class="actions"></div>`; $("#situation").innerHTML = `<div class="situation-art">${event[1]} 🐈 ✨</div><div class="situation-label">${selectedMap().flag} ${gameText(selectedMap().name)}</div>`; $("#status").textContent = gameText(`${player.name}, what would feel kindest?`);
+      const actions = $("#actions"), action = (text, callback, className = "secondary") => { const button = document.createElement("button"); button.textContent = gameText(text); button.className = className; button.onclick = callback; actions.append(button); };
+      if (event[0] === "food") action("Accept the yummy snack (+2 fish)", () => { player.cards += 2; log(`${player.name} found a yummy snack.`); nextTurn(); }, "good");
+      if (event[0] === "share") action("Share with a buddy (+1 each)", () => { player.cards++; players[(turn + 1) % players.length].cards++; log(`${player.name} shared dinner.`); nextTurn(); }, "good");
+      if (event[0] === "shelter") action("Take a cozy rest", () => { player.worry = Math.max(0, player.worry - 1); player.cards++; nextTurn(); }, "good");
+      if (event[0] === "crisis") { action("Be brave (+1 worry)", () => { player.worry++; nextTurn(); }, "danger"); if (player.cards > 0) action("Use one fish card", () => { player.cards--; nextTurn(); }); }
+      if (event[0] === "supply") action("Stock the shared rescue nook", () => { station.food += 2; station.medical++; nextTurn(); }, "good");
+      if (event[0] === "adoption") action("Give one fish to a hopeful home", () => { player.cards = Math.max(0, player.cards - 1); nextTurn(); }, "good");
+      updateBoard();
+      applyLanguage();
+    }
+    function finish() { ended = true; const total = players.reduce((sum, player) => sum + player.cards, 0), won = total >= players.length * 3 && players.every(player => player.worry < 3); saveData.tokens += total; save(); $("#result").className = `result ${won ? "win" : "loss"}`; $("#result").innerHTML = `${gameText(won ? "🌟 Your sweet crew made it together!" : "🌧️ It was a wobbly night, but your kitties tried their best.")}<br><button id="resultHome">${gameText("Back to the cozy menu")}</button>`; $("#result").classList.remove("hidden"); $("#resultHome").onclick = () => show("title"); $("#event").innerHTML = `<h2>${gameText(won ? "A warm little ending" : "A gentle goodbye")}</h2><p>${gameText("Thank you for caring for your whole crew")} 💙</p>`; updateBoard(); }
+    function startGame() { const cards = [...$("#setups").children]; players = cards.map((card, index) => ({ name: card.querySelector(".name").value.trim() || `Kitty ${index + 1}`, cat: { name: ["Orange Cat","Calico Cat","Gray Cat","Tuxedo Cat"][index], color: card.querySelector(".colour-choice.selected").dataset.fur }, outfit: card.querySelector(".outfit").value, accessory: card.querySelector(".accessory").value, cards: Math.max(0, Math.min(8, Number($("#starting").value) || 0)), worry: 0 })); turn = 0; turns = 0; ended = false; notes = []; station = { food:0, medical:0 }; $("#log").innerHTML = ""; $("#result").className = "result hidden"; $("#badge").textContent = `${selectedMap().flag} ${selectedMap().name}`; show("game"); updateScenes(); log(`Your little crew begins in ${selectedMap().name}.`); drawEvent(); }
+    $("#mapSelect").innerHTML = maps.map(map => `<option value="${map.name}">${map.flag} ${map.name}</option>`).join(""); $("#mapSelect").onchange = updateScenes; $("#musicToggle").onclick = toggleMusic; $("#langEn").onclick = () => { localStorage.setItem("cityCatsLanguage", "en"); location.reload(); }; $("#langZh").onclick = () => { localStorage.setItem("cityCatsLanguage", "zh"); location.reload(); }; $("#langZhHant").onclick = () => { localStorage.setItem("cityCatsLanguage", "zh-Hant"); location.reload(); }; $("#play").onclick = () => { renderSetups(); show("setup"); updateScenes(); }; $("#wardrobe").onclick = () => { renderShop(); show("wardrobeScreen"); }; $("#how").onclick = () => show("howScreen"); $("#howPlay").onclick = () => { renderSetups(); show("setup"); }; $("#setupWardrobe").onclick = () => { renderShop(); show("wardrobeScreen"); }; $("#start").onclick = startGame; $("#leave").onclick = () => { ended = true; show("title"); }; document.querySelectorAll(".home").forEach(button => button.onclick = () => show("title"));
+    document.querySelectorAll(".title-cat-slot").forEach((slot, index) => {
+      const canvas = makeCanvas(slot.dataset.fur, "coat", "bowtie", "title-cat");
+      canvas.setAttribute("role", "button"); canvas.setAttribute("tabindex", "0"); canvas.setAttribute("aria-label", `Pet cat ${index + 1}`);
+      slot.append(canvas);
+      slot.addEventListener("pointerdown", event => {
+        const rect = canvas.getBoundingClientRect();
+        if (event.clientY - rect.top <= rect.height * .58) petTitleCat(slot);
+      });
+      canvas.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); petTitleCat(slot); } });
+    });
+    document.addEventListener("click", event => { if (event.target.closest("button")) playMeow(); });
+    renderCounts(); renderSetups(); renderShop(); updateScenes(); save(); applyLanguage(); setInterval(() => document.querySelectorAll("canvas.pixel").forEach(drawPixelCat), 120);
+  </script>
+</body>
+</html>
