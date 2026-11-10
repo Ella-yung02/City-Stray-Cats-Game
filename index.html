@@ -376,6 +376,8 @@
     .pixel-showcase { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 10px; border: 1px solid #fff3; border-radius: 16px; background: #08172e99; }
     .pixel { display: block; flex: 0 0 auto; width: 192px; height: 192px; image-rendering: pixelated; image-rendering: crisp-edges; border: 1px solid #fff3; border-radius: 12px; background: #071226; box-shadow: 0 0 18px #7ce0c233; }
     .shop-preview { width: 128px; height: 128px; }
+    .setup-preview { width: 224px; height: 224px; border-color: var(--gold); box-shadow: 0 0 24px #ffe29a33, inset 0 0 18px #7ce0c222; }
+    .wardrobe-owned { border-color: #91e0bd88; }
     .pixel-copy { min-width: 0; }
     .pixel-name { font-weight: 850; }
     .caption { color: var(--muted); font-size: .82rem; }
@@ -568,10 +570,20 @@
     }
     function outfitChoiceLabel(item) {
       const source = `${item[4]} ${wardrobeName(item)}`;
-      const marker = item[10] === "lottery"
+      const owned = saveData.outfits.includes(item[0]);
+      const marker = owned
+        ? language === "en" ? " · ✅ Already obtained" : language === "zh" ? " · ✅ 已获得" : " · ✅ 已獲得"
+        : item[10] === "lottery"
         ? language === "en" ? " · 🎟️ Country lottery outfit" : language === "zh" ? " · 🎟️ 国家限定抽奖服装" : " · 🎟️ 國家限定抽獎服裝"
         : item[2] === 0 ? translateText(" · 🎁 starter gift") : ` · ${item[2]} ${translateText("tokens")}`;
       return source + marker;
+    }
+    function accessoryChoiceLabel(item) {
+      const source = `${item[4]} ${translateText(item[1])}`;
+      const owned = saveData.accessories.includes(item[0]);
+      return source + (owned
+        ? language === "en" ? " · ✅ Already obtained" : language === "zh" ? " · ✅ 已获得" : " · ✅ 已獲得"
+        : item[2] === 0 ? translateText(" · 🎁 starter gift") : ` · ${item[2]} ${translateText("tokens")}`);
     }
     function countryKnowledge(map) {
       return map.knowledge?.[language === "zh-Hant" ? "han" : language] || map.knowledge?.en || "";
@@ -986,9 +998,9 @@
       for (let index = 0; index < Number($("#count").dataset.value || 2); index++) {
         const previous = old[index] || {}, fur = previous.fur || furColours[index % furColours.length][0], outfit = pick(unlockedOutfits, previous.outfit), accessory = pick(unlockedAccessories, previous.accessory);
         const card = document.createElement("div"); card.className = "setup-player";
-        card.innerHTML = `<label>${translateText(`Player ${index + 1}'s sweet name`)}<input class="name" maxlength="18" placeholder="${translateText(`Kitty ${index + 1}`)}" value="${esc(previous.name || "")}"></label><label style="margin-top:8px">${translateText("Fur colour")}<div class="colour-picker">${furColours.map(item => `<button type="button" class="colour-choice ${item[0] === fur ? "selected" : ""}" data-fur="${item[0]}"><span class="swatch" style="background:${item[2]}"></span>${translateText(item[1])}</button>`).join("")}</div></label><div class="grid"><label>${translateText("Outfit")}<select class="outfit">${unlockedOutfits.map(item => `<option value="${item[0]}" ${item[0] === outfit[0] ? "selected" : ""}>${esc(outfitChoiceLabel(item))}</option>`).join("")}</select></label><label>${translateText("Accessory")}<select class="accessory">${unlockedAccessories.map(item => `<option value="${item[0]}" ${item[0] === accessory[0] ? "selected" : ""}>${item[4]} ${translateText(item[1])}${item[2] === 0 ? translateText(" · 🎁 starter gift") : ` · ${item[2]} ${translateText("tokens")}`}</option>`).join("")}</select></label></div><div class="pixel-showcase"><div class="preview"></div><div class="pixel-copy"><div class="pixel-name">${translateText("Your sparkly pixel kitty")}</div><div class="caption fur-label"></div><div class="caption outfit-label"></div><div class="caption accessory-label"></div></div></div>`;
+        card.innerHTML = `<label>${translateText(`Player ${index + 1}'s sweet name`)}<input class="name" maxlength="18" placeholder="${translateText(`Kitty ${index + 1}`)}" value="${esc(previous.name || "")}"></label><label style="margin-top:8px">${translateText("Fur colour")}<div class="colour-picker">${furColours.map(item => `<button type="button" class="colour-choice ${item[0] === fur ? "selected" : ""}" data-fur="${item[0]}"><span class="swatch" style="background:${item[2]}"></span>${translateText(item[1])}</button>`).join("")}</div></label><div class="grid"><label>${translateText("Outfit")}<select class="outfit">${unlockedOutfits.map(item => `<option value="${item[0]}" ${item[0] === outfit[0] ? "selected" : ""}>${esc(outfitChoiceLabel(item))}</option>`).join("")}</select></label><label>${translateText("Accessory")}<select class="accessory">${unlockedAccessories.map(item => `<option value="${item[0]}" ${item[0] === accessory[0] ? "selected" : ""}>${esc(accessoryChoiceLabel(item))}</option>`).join("")}</select></label></div><div class="pixel-showcase"><div class="preview"></div><div class="pixel-copy"><div class="pixel-name">${translateText("Your sparkly pixel kitty")}</div><div class="caption">${translateText("Detailed 96×96 pixel preview ✨")}</div><div class="caption fur-label"></div><div class="caption outfit-label"></div><div class="caption accessory-label"></div></div></div>`;
         $("#setups").append(card);
-        const update = () => { const selectedFur = card.querySelector(".colour-choice.selected").dataset.fur, selectedOutfit = pick(outfits, card.querySelector(".outfit").value), selectedAccessory = pick(accessories, card.querySelector(".accessory").value); card.querySelector(".preview").replaceChildren(makeCanvas(selectedFur, selectedOutfit[3], selectedAccessory[3])); card.querySelector(".fur-label").textContent = translateText(`🎨 ${furColours.find(item => item[0] === selectedFur)[1]}`); card.querySelector(".outfit-label").textContent = `${selectedOutfit[4]} ${wardrobeName(selectedOutfit)}`; card.querySelector(".accessory-label").textContent = translateText(`🎀 ${selectedAccessory[4]} ${selectedAccessory[1]}`); applyLanguage(); };
+        const update = () => { const selectedFur = card.querySelector(".colour-choice.selected").dataset.fur, selectedOutfit = pick(outfits, card.querySelector(".outfit").value), selectedAccessory = pick(accessories, card.querySelector(".accessory").value); card.querySelector(".preview").replaceChildren(makeCanvas(selectedFur, selectedOutfit[3], selectedAccessory[3], "setup-preview")); card.querySelector(".fur-label").textContent = translateText(`🎨 ${furColours.find(item => item[0] === selectedFur)[1]}`); card.querySelector(".outfit-label").textContent = `${selectedOutfit[4]} ${wardrobeName(selectedOutfit)}`; card.querySelector(".accessory-label").textContent = translateText(`🎀 ${selectedAccessory[4]} ${selectedAccessory[1]}`); applyLanguage(); };
         card.querySelectorAll(".colour-choice").forEach(button => button.onclick = () => { card.querySelectorAll(".colour-choice").forEach(choice => choice.classList.remove("selected")); button.classList.add("selected"); update(); });
         card.querySelector(".outfit").onchange = update; card.querySelector(".accessory").onchange = update; update();
       }
@@ -996,13 +1008,18 @@
     }
     function renderShop() {
       const list = $("#shop"); list.innerHTML = "";
-      [...outfits, ...accessories].filter(item => (item[10] === "lottery" || item[2] > 0) && !saveData[outfits.includes(item) ? "outfits" : "accessories"].includes(item[0])).forEach(item => {
-        const collection = outfits.includes(item) ? "outfits" : "accessories", row = document.createElement("div"); row.className = `shop-item ${item[10] === "lottery" ? "lottery-exclusive" : ""}`;
-        const itemName = wardrobeName(item), itemFeeling = wardrobeDescription(item), itemPrice = item[10] === "lottery" ? translateText("🎟️ Won from the country outfit lottery") : translateText(`Pay ${item[2]} style stars (tokens) to unlock`);
+      [...outfits, ...accessories].forEach(item => {
+        const collection = outfits.includes(item) ? "outfits" : "accessories", owned = saveData[collection].includes(item[0]), row = document.createElement("div"); row.className = `shop-item ${item[10] === "lottery" ? "lottery-exclusive" : ""} ${owned ? "wardrobe-owned" : ""}`;
+        const itemName = wardrobeName(item), itemFeeling = wardrobeDescription(item);
+        const itemPrice = owned
+          ? language === "en" ? "✅ Already obtained · Choose it during cat creation" : language === "zh" ? "✅ 已获得 · 可在制作猫猫时选择" : "✅ 已獲得 · 可在製作貓貓時選擇"
+          : item[10] === "lottery" ? translateText("🎟️ Won from the country outfit lottery") : item[2] === 0 ? translateText("🎁 Starter gift") : translateText(`Pay ${item[2]} style stars (tokens) to unlock`);
         row.innerHTML = `<div class="pixel-showcase"><div class="shop-preview-holder"></div><div><strong>${item[4]} ${esc(itemName)}</strong><br><span class="caption">${esc(itemFeeling)}</span><br><span class="caption">${esc(itemPrice)}</span></div></div>`;
         row.querySelector(".shop-preview-holder").append(makeCanvas("orange", collection === "outfits" ? item[3] : "coat", collection === "accessories" ? item[3] : "bowtie", "shop-preview"));
         const buy = document.createElement("button");
-        if (item[10] === "lottery") { buy.textContent = translateText("🎟️ Lottery exclusive"); buy.disabled = true; }
+        if (owned) { buy.textContent = language === "en" ? "✅ Obtained" : language === "zh" ? "✅ 已获得" : "✅ 已獲得"; buy.disabled = true; }
+        else if (item[10] === "lottery") { buy.textContent = translateText("🎟️ Lottery exclusive"); buy.disabled = true; }
+        else if (item[2] === 0) { buy.textContent = translateText("🎁 Starter gift"); buy.disabled = true; }
         else { buy.textContent = translateText(`Unlock · ${item[2]} stars`); buy.disabled = saveData.tokens < item[2]; buy.onclick = () => { saveData.tokens -= item[2]; saveData[collection].push(item[0]); save(); renderShop(); renderSetups(); }; }
         row.append(buy); list.append(row);
       });
