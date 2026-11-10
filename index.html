@@ -309,6 +309,7 @@
     .building.roof::after { content: ""; position: absolute; top: -15px; left: -5px; width: calc(100% + 10px); height: 17px; background: var(--roof); clip-path: polygon(0 100%, 50% 0, 100% 100%); }
     .scene-landmarks { position: absolute; right: 16%; bottom: 35px; left: 16%; display: flex; justify-content: space-between; align-items: end; z-index: 2; pointer-events: none; }
     .cat-knowledge { margin-top: 10px; padding: 10px 12px; border-left: 3px solid var(--gold); border-radius: 10px; background: #ffe29a12; color: var(--muted); font-size: .88rem; line-height: 1.55; }
+    .rhetorical-question { font-weight: 850; color: var(--ink); margin-bottom: 4px; }
     .landmark { font-size: clamp(1.8rem, 6vw, 3.2rem); filter: drop-shadow(0 3px 4px #08142699); animation: bob 3.6s infinite alternate; }
     .landmark:nth-child(2) { animation-delay: -.9s; }
     .landmark:nth-child(3) { animation-delay: -1.8s; }
@@ -574,6 +575,29 @@
     }
     function countryKnowledge(map) {
       return map.knowledge?.[language === "zh-Hant" ? "han" : language] || map.knowledge?.en || "";
+    }
+    function roundQuestion(player) {
+      const questions = {
+        en: [
+          `${player.name}, what would make this moment gentler?`,
+          `${player.name}, how can your crew share kindness here?`,
+          `${player.name}, what would help this kitty feel safer?`,
+          `${player.name}, which caring choice fits this round?`
+        ],
+        zh: [
+          `${player.name}，怎样做能让这一刻更温柔呢？`,
+          `${player.name}，你的小队可以怎样分享善意呢？`,
+          `${player.name}，什么能让这只猫猫更有安全感呢？`,
+          `${player.name}，这一回合哪一个选择最有爱呢？`
+        ],
+        "zh-Hant": [
+          `${player.name}，怎樣做能讓這一刻更溫柔呢？`,
+          `${player.name}，你的小隊可以怎樣分享善意呢？`,
+          `${player.name}，什麼能讓這隻貓貓更有安全感呢？`,
+          `${player.name}，這一回合哪一個選擇最有愛呢？`
+        ]
+      };
+      return questions[language][turns % questions[language].length];
     }
     function requiredFish() {
       return difficultyInfo[$("#difficulty").value]?.target || difficultyInfo.easy.target;
@@ -1014,7 +1038,7 @@
     }
     function nextTurn() { if (ended) return; turns++; if (turns >= players.length * 4) return finish(); turn = turns % players.length; drawEvent(); }
     function drawEvent() {
-      const event = events[Math.floor(Math.random() * events.length)], player = players[turn], map = selectedMap(); $("#event").innerHTML = `<div class="event-icon">${event[1]}</div><div class="event-type">${gameText("A gentle city moment")}</div><h2 class="event-title">${gameText(event[2])}</h2><div class="event-text">${gameText(event[3])}</div><div id="actions" class="actions"></div>`; $("#situation").innerHTML = `<div class="situation-art">${event[1]} 🐈 ✨</div><div class="situation-label">${map.flag} ${gameText(map.name)}</div><div class="cat-knowledge"><strong>${gameText("Stray-cat knowledge")}</strong><br>${esc(countryKnowledge(map))}</div>`; $("#status").textContent = gameText(`${player.name}, what would feel kindest?`);
+      const event = events[Math.floor(Math.random() * events.length)], player = players[turn], map = selectedMap(); $("#event").innerHTML = `<div class="event-icon">${event[1]}</div><div class="event-type">${gameText("A gentle city moment")}</div><h2 class="event-title">${gameText(event[2])}</h2><div class="event-text">${gameText(event[3])}</div><div id="actions" class="actions"></div>`; $("#situation").innerHTML = `<div class="situation-art">${event[1]} 🐈 ✨</div><div class="situation-label">${map.flag} ${gameText(map.name)}</div>`; $("#status").innerHTML = `<div class="rhetorical-question">${esc(roundQuestion(player))}</div><div class="cat-knowledge"><strong>${gameText("Stray-cat knowledge")}</strong><br>${esc(countryKnowledge(map))}</div>`;
       const actions = $("#actions"), action = (text, callback, className = "secondary") => { const button = document.createElement("button"); button.textContent = gameText(text); button.className = className; button.onclick = callback; actions.append(button); };
       if (event[0] === "food") action("Accept the yummy snack (+2 fish)", () => { player.cards += 2; log(`${player.name} found a yummy snack.`); nextTurn(); }, "good");
       if (event[0] === "share") action("Share with a buddy (+1 each)", () => { player.cards++; players[(turn + 1) % players.length].cards++; log(`${player.name} shared dinner.`); nextTurn(); }, "good");
