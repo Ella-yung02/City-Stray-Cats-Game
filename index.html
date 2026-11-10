@@ -467,7 +467,7 @@
       <div class="top-actions"><button class="secondary home">← Back to the cozy menu</button></div>
       <h2>How to play, little paw-friend 📖</h2>
       <p>Take turns choosing kind actions for your crew.</p>
-      <ul><li>Collect three fish cards for every kitty.</li><li>Keep every cat's worry below 3.</li><li>Share helpful supplies and cozy breaks.</li><li>Finish together to earn style stars.</li></ul>
+      <ul>      <li>Reach the required fish-card goal for your challenge.</li><li>Keep every cat's worry below 3.</li><li>Share helpful supplies and cozy breaks.</li><li>Finish together to earn style stars.</li></ul>
       <button id="howPlay" class="good">Okay, let's make our kitties!</button>
     </section>
 
@@ -480,7 +480,7 @@
         <div id="gameScene" class="country-scene"></div>
         <div class="board"><section><div id="event" class="event-card"></div><div id="situation" class="situation"></div><div id="status" class="status"></div></section><aside><h2>Your lovely crew 🐈</h2><div id="players" class="players"></div><div class="status"><strong>🤝 Shared rescue nook</strong><div id="station"></div></div></aside></div>
       </section>
-      <div class="lower"><section class="panel"><h3>Our sweet team goal 🌟</h3><p class="note">Gather fish cards, lower worry, and help every kitty feel safe.</p></section><section class="panel"><h3>Little neighborhood notes</h3><ul id="log" class="log"></ul></section></div>
+      <div class="lower"><section class="panel"><h3>Our sweet team goal 🌟</h3><p id="teamGoal" class="note">Gather 10 fish cards, lower worry, and help every kitty feel safe.</p></section><section class="panel"><h3>Little neighborhood notes</h3><ul id="log" class="log"></ul></section></div>
     </section>
   </main>
 
@@ -502,36 +502,36 @@
       { name:"South Korea", flag:"🇰🇷", tier:"hard", bonus:0, signature:"korea", theme:"mountain", detail:"traditional eaves, modern lights, and blossoms", landmarks:["🏯","🌸","🏙️"] }
     ];
     const difficultyInfo = {
-      easy: { fish:3, description:"Gentle stroll always starts with three fish cards. Some cities add bonus fish." },
-      normal: { fish:2, description:"Wiggly city adventure always starts with two fish cards. Some cities add bonus fish." },
-      hard: { rank:2, fish:0, description:"Big brave challenge gives your crew no starting fish cards. Every kind choice matters." }
+      easy: { fish:3, target:10, description:"Gentle stroll starts with three fish cards and requires 10 fish cards to finish. Some cities add bonus fish." },
+      normal: { fish:2, target:15, description:"Wiggly city adventure starts with two fish cards and requires 15 fish cards to finish. Some cities add bonus fish." },
+      hard: { fish:0, target:20, description:"Big brave challenge gives no starting fish cards and requires 20 fish cards to finish. Every kind choice matters." }
     };
     const difficultyCopy = {
       en: {
         easy: "🟩 Gentle stroll · 3 fish",
         normal: "🟨 Wiggly city adventure · 2 fish",
         hard: "🟥 Big brave challenge · 0 fish",
-        easyDescription: "Gentle stroll always starts with three fish cards. Some cities add bonus fish.",
-        normalDescription: "Wiggly city adventure always starts with two fish cards. Some cities add bonus fish.",
-        hardDescription: "Big brave challenge gives your crew no starting fish cards. Every kind choice matters.",
+        easyDescription: "Gentle stroll starts with three fish cards and requires 10 fish cards to finish. Some cities add bonus fish.",
+        normalDescription: "Wiggly city adventure starts with two fish cards and requires 15 fish cards to finish. Some cities add bonus fish.",
+        hardDescription: "Big brave challenge gives no starting fish cards and requires 20 fish cards to finish. Every kind choice matters.",
         bonus: "This city adds"
       },
       zh: {
         easy: "🟩 轻松散步 · 3张鱼卡",
         normal: "🟨 摇摇晃晃的城市冒险 · 2张鱼卡",
         hard: "🟥 勇敢的大挑战 · 0张鱼卡",
-        easyDescription: "轻松散步固定从三张鱼卡开始。有些城市会额外增加鱼卡。",
-        normalDescription: "摇摇晃晃的城市冒险固定从两张鱼卡开始。有些城市会额外增加鱼卡。",
-        hardDescription: "勇敢的大挑战不会提供初始鱼卡。每一个友善的选择都很重要。",
+        easyDescription: "轻松散步从三张鱼卡开始，并需要收集10张鱼卡才能完成。有些城市会额外增加鱼卡。",
+        normalDescription: "摇摇晃晃的城市冒险从两张鱼卡开始，并需要收集15张鱼卡才能完成。有些城市会额外增加鱼卡。",
+        hardDescription: "勇敢的大挑战不会提供初始鱼卡，并需要收集20张鱼卡才能完成。每一个友善的选择都很重要。",
         bonus: "这座城市额外增加"
       },
       "zh-Hant": {
         easy: "🟩 輕鬆散步 · 3張魚卡",
         normal: "🟨 搖搖晃晃的城市冒險 · 2張魚卡",
         hard: "🟥 勇敢的大挑戰 · 0張魚卡",
-        easyDescription: "輕鬆散步固定從三張魚卡開始。有些城市會額外增加魚卡。",
-        normalDescription: "搖搖晃晃的城市冒險固定從兩張魚卡開始。有些城市會額外增加魚卡。",
-        hardDescription: "勇敢的大挑戰不會提供初始魚卡。每一個友善的選擇都很重要。",
+        easyDescription: "輕鬆散步從三張魚卡開始，並需要收集10張魚卡才能完成。有些城市會額外增加魚卡。",
+        normalDescription: "搖搖晃晃的城市冒險從兩張魚卡開始，並需要收集15張魚卡才能完成。有些城市會額外增加魚卡。",
+        hardDescription: "勇敢的大挑戰不會提供初始魚卡，並需要收集20張魚卡才能完成。每一個友善的選擇都很重要。",
         bonus: "這座城市額外增加"
       }
     };
@@ -546,12 +546,21 @@
     function defaultKittyName(index) {
       return language === "zh" ? `猫猫${index + 1}` : language === "zh-Hant" ? `貓貓${index + 1}` : `Kitty ${index + 1}`;
     }
+    function requiredFish() {
+      return difficultyInfo[$("#difficulty").value]?.target || difficultyInfo.easy.target;
+    }
+    function renderTeamGoal() {
+      const target = requiredFish();
+      const text = language === "en" ? `Gather ${target} fish cards, lower worry, and help every kitty feel safe.` : language === "zh" ? `收集${target}张鱼卡、减少担忧，让每只猫猫都感到安全。` : `收集${target}張魚卡、減少擔憂，讓每隻貓貓都感到安全。`;
+      $("#teamGoal").textContent = text;
+    }
     function syncDifficulty() {
       const selected = $("#difficulty").value, map = selectedMap(), baseFish = difficultyInfo[selected].fish, bonus = map.bonus || 0;
       $("#starting").value = Math.min(8, baseFish + bonus);
       const copy = currentDifficultyCopy();
       const bonusText = bonus ? ` ${copy.bonus} ${bonus} ${language === "en" ? "fish cards." : language === "zh" ? "张鱼卡。" : "張魚卡。"}` : "";
       $("#difficultyDescription").textContent = copy[`${selected}Description`] + bonusText;
+      renderTeamGoal();
     }
     const furColours = [
       ["orange","Honey orange","#e9a35e"],["calico","Calico patches","#d9775d"],["gray","Moonlight gray","#b9b9d1"],["tuxedo","Tuxedo cream","#eee8f5"],
@@ -869,7 +878,7 @@
     }
     function log(text) { notes.unshift(gameText(text)); $("#log").innerHTML = notes.slice(0, 10).map(item => `<li>${esc(item)}</li>`).join(""); }
     function updateBoard() {
-      const total = players.reduce((sum, player) => sum + player.cards, 0), target = players.length * 3;
+      const total = players.reduce((sum, player) => sum + player.cards, 0), target = requiredFish();
       $("#round").textContent = gameText(`Round ${Math.min(4, Math.floor(turns / players.length) + 1)} of 4`); $("#team").textContent = gameText(`🐟 Fish cards: ${total}/${target}`); $("#turn").textContent = ended ? gameText("Adventure complete") : gameText(`🐾 ${players[turn].name}'s turn`); $("#progress").style.width = `${Math.min(100, total / target * 100)}%`; $("#station").textContent = gameText(`🍲 Food: ${station.food} · 🩹 Medical: ${station.medical}`);
       $("#players").innerHTML = players.map((player, index) => `<div class="player ${index === turn && !ended ? "active" : ""}"><div class="player-head"><span>${esc(player.name)}</span><span>${esc(gameText(player.cat.name))}</span></div><div class="stats">${gameText(`🎨 ${player.cat.color} · 🐟 ${player.cards} fish · 💧 ${player.worry}/3 worry`)}</div><div class="pixel-showcase"><div class="game-preview"></div><div class="pixel-copy"><div class="pixel-name">${esc(gameText(`${player.name}'s kitty`))}</div><div class="caption">${esc(gameText(pick(outfits, player.outfit)[1]))}</div><div class="caption">${esc(gameText(pick(accessories, player.accessory)[1]))}</div></div></div></div>`).join("");
       players.forEach((player, index) => $("#players").children[index].querySelector(".game-preview").append(makeCanvas(player.cat.color, player.outfit, player.accessory)));
@@ -890,8 +899,8 @@
     }
     function finish() {
       ended = true;
-      const total = players.reduce((sum, player) => sum + player.cards, 0), won = total >= players.length * 3 && players.every(player => player.worry < 3);
-      const hopeful = !won && total >= players.length * 2;
+      const total = players.reduce((sum, player) => sum + player.cards, 0), target = requiredFish(), won = total >= target && players.every(player => player.worry < 3);
+      const hopeful = !won && total >= Math.ceil(target * .6);
       const ending = won ? ["A warm homecoming", "Every kitty has enough fish and a safe place to rest tonight."] : hopeful ? ["A hopeful promise", "The night was difficult, but your kindness kept the crew together."] : ["A rainy lesson", "There was not enough for everyone yet, so the crew will try again tomorrow."];
       saveData.tokens += total; save(); $("#result").className = `result ${won ? "win" : "loss"}`;
       $("#result").innerHTML = `<strong>${gameText(ending[0])}</strong><p>${gameText(ending[1])}</p><button id="resultHome">${gameText("Back to the cozy menu")}</button>`;
